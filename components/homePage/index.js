@@ -1,6 +1,3 @@
-import { observer } from 'mobx-react';
-import { ViewStore } from '../../store/viewStore';
-
 // imported modules
 import HomeNavbar from './homeNavbar';
 import IntroHeader from './introHeader';
@@ -9,17 +6,12 @@ import FeaturedPharmacies from './featuredPharmacies';
 import HowItWorks from './howItWorks';
 import CallToAction from './callToAction';
 
-type Props = {
-  store: ViewStore,
-}
 
-const HomePage = ({ store }: Props) => (
+const HomePage = () => (
   <div>
     <main>
       <section>
-        <HomeNavbar
-          store={store}
-        />
+        <HomeNavbar />
         <IntroHeader />
       </section>
       <DrugSearch />
@@ -47,4 +39,4 @@ const HomePage = ({ store }: Props) => (
   </div>
 );
 
-export default observer(['store'], HomePage);
+export default HomePage;

@@ -56,7 +56,7 @@ const FeaturedPharmacies = () => {
           padding: 2% 10%;
         }
         h3 {
-          background: teal;
+          background: #009688;
           color: #fff;
           font-size: 36px;
           line-height: 100px;

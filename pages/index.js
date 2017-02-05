@@ -5,6 +5,9 @@ import { Component } from 'react';
 import { Provider } from 'mobx-react';
 import { useStrict } from 'mobx';
 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import { teal500, teal700, deepOrangeA200 } from 'material-ui/styles/colors';
 
 import store from '../store/viewStore';
 
@@ -31,12 +34,27 @@ export default class extends Component {
   render() {
     return (
       <Provider store={store}>
-        <App
-          userAgent={this.props.userAgent}
-          title="Neem Health - Your online Pharmacy"
+        <MuiThemeProvider
+          muiTheme={getMuiTheme({
+            userAgent: this.props.userAgent,
+            palette: {
+              primary1Color: teal500,
+              primary2Color: teal700,
+              accent1Color: deepOrangeA200,
+              pickerHeaderColor: teal500,
+            },
+            appBar: {
+              height: 56,
+            },
+          }
+          )}
         >
-          <HomePage />
-        </App>
+          <App
+            title="Neem Health - Your online Pharmacy"
+          >
+            <HomePage />
+          </App>
+        </MuiThemeProvider>
       </Provider>
     );
   }

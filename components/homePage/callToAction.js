@@ -13,8 +13,6 @@ const CallToAction = () => (
       <RaisedButton
         label="Get Started" secondary
         style={style.space}
-        labelPosition="before"
-        labelStyle={style.space}
       />
     </div>
     <style jsx>{`

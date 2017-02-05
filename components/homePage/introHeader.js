@@ -20,7 +20,7 @@ const IntroHeader = () => (
 
       p {
         font-size: 150%;
-        font-weight: lighter;
+        font-weight: 400;
         padding-top: 3%
       }
 
