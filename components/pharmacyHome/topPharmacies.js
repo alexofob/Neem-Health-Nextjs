@@ -17,7 +17,7 @@ const TopPharmacies = () => {
         infinite: true,
       },
     }, {
-      breakpoint: 640,
+      breakpoint: 641,
       settings: {
         slidesToShow: 2,
         slidesToScroll: 1,
@@ -49,7 +49,6 @@ const TopPharmacies = () => {
         }
         h2 {
           font-weight: normal;
-          text-align: center;
         }
         .container {
           padding: 2% 10%;

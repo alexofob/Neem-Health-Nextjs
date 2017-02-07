@@ -31,13 +31,13 @@ const MobilePubNav = inject('store')(observer(({ store }: Props) => (
       leftIcon={<MdSearch />}
       onTouchTap={store.closeDrawer}
     />
-    <Link href="/pharmacy">
+    <Link href="/pharmacy"><a>
       <MenuItem
         primaryText="For Pharmacies"
         leftIcon={<MdLocalPharmacy />}
         onTouchTap={store.closeDrawer}
       />
-    </Link>
+    </a></Link>
   </div>
 )));
 

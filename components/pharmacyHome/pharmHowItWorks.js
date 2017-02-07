@@ -1,5 +1,5 @@
 import MdSearch from 'react-icons/lib/md/search';
-import MdAddShoppingCart from 'react-icons/lib/md/add-shopping-cart';
+import FaMoney from 'react-icons/lib/fa/money';
 import MdStore from 'react-icons/lib/md/store';
 import FaFileTextO from 'react-icons/lib/fa/file-text-o';
 
@@ -9,31 +9,39 @@ const PharmHowItWorks = () => (
     <div className="container">
       <div className="message">
         <span className="icon"><MdStore /></span>
-        <h3>Stock</h3>
-        <p>Creat your product catalog and update stock regularly as you restock.
-        </p>
+        <div className="message-padding">
+          <h3>Stock</h3>
+          <p>Creat your product catalog and update stock regularly as you restock.
+          </p>
+        </div>
       </div>
       <div className="message">
-        <span className="icon"><MdAddShoppingCart /></span>
-        <h3>Sell</h3>
-        <p>Sell drugs to your patients using the point of sale interface and
-          have your drug catalog sync online.
-        </p>
+        <span className="icon"><FaMoney /></span>
+        <div className="message-padding">
+          <h3>Sell</h3>
+          <p>Sell drugs to your patients using the point of sale interface and
+            have your drug catalog sync online.
+          </p>
+        </div>
       </div>
       <div className="message">
         <span className="icon"><MdSearch /></span>
-        <h3>Search capable</h3>
-        <p>Patients will be able to search for their drugs online and be
-          notified if you have their drugs in stock.
-        </p>
+        <div className="message-padding">
+          <h3>Search capable</h3>
+          <p>Patients will be able to search for their drugs online and be
+            notified if you have their drugs in stock.
+          </p>
+        </div>
       </div>
       <div className="message">
         <span className="icon"><FaFileTextO /></span>
-        <h3>Serve Online</h3>
-        <span className="message-text"><p>Patients may post their subscriptions
-          online or request for specific drugs and you will be notified to serve
-          to them.
-        </p></span>
+        <div className="message-padding">
+          <h3>Serve Online</h3>
+          <span className="message-text"><p>Patients may post their subscriptions
+            online or request for specific drugs and you will be notified to serve
+            to them.
+          </p></span>
+        </div>
       </div>
     </div>
     <style jsx>{`
@@ -42,7 +50,6 @@ const PharmHowItWorks = () => (
       }
       h2 {
         font-weight: normal;
-        text-align: center;
       }
       .container {
         display: flex;
@@ -52,11 +59,8 @@ const PharmHowItWorks = () => (
       }
       .message {
         display: flex;
-        flex-direction: column;
-
-        align-items: center;
         flex: 0 0 50%;
-        padding: 4% 5%;
+        padding: 4% 4% 4% 0;
       }
       .icon {
         font-size: 48px;
@@ -64,13 +68,13 @@ const PharmHowItWorks = () => (
         opacity: 0.8;
       }
       p {
-        text-align: center;
         opacity: 0.54;
         max-width: 320px;
       }
-      h3 {
-        padding: 4% 0 2% 0;
+      .message-padding {
+        padding-left: 5%
       }
+
       @media (max-width: 640px) {
 
         .message {

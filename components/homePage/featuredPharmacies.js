@@ -15,7 +15,7 @@ const FeaturedPharmacies = () => {
         infinite: true,
       },
     }, {
-      breakpoint: 640,
+      breakpoint: 641,
       settings: {
         slidesToShow: 2,
         slidesToScroll: 1,

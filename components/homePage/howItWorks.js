@@ -56,7 +56,7 @@ const HowItWorks = () => (
 
         align-items: center;
         flex: 0 0 50%;
-        padding: 4% 5%;
+        padding: 8% 5%;
       }
       .icon {
         font-size: 48px;

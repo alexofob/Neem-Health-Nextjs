@@ -1,5 +1,3 @@
-import { inject, observer } from 'mobx-react';
-
 // imported modules
 import PharmNavbar from './pharmNavbar';
 import PharmHeader from './pharmHeader';
@@ -8,7 +6,7 @@ import PharmHowItWorks from './pharmHowItWorks';
 import PharmCallToAction from './pharmCallToAction';
 
 
-const HomePage = inject('store')(observer(() => (
+const HomePage = () => (
   <div>
     <main>
       <PharmNavbar />
@@ -32,6 +30,6 @@ const HomePage = inject('store')(observer(() => (
     `}</style>
 
   </div>
-)));
+);
 
 export default HomePage;

@@ -36,7 +36,7 @@ const PharmHeader = () => (
       .intro-header {
         display: flex;
         padding: 4% 0 4% 10%;
-        background-image: url('../../static/pharmacy-home3-cropped.jpg');
+        background-image: url('../../static/pharmacy-home3-big.jpg');
       }
 
       .main-message-wrapper {
@@ -49,7 +49,6 @@ const PharmHeader = () => (
       }
 
       @media (max-width: 847px) {
-
         .main-message-wrapper {
           max-width: 350px;
         }
@@ -62,13 +61,6 @@ const PharmHeader = () => (
         }
         .main-message-wrapper {
           max-width: 684px;
-        }
-      }
-
-      @media (max-width: 400px) {
-        p {
-          font-size: 100%;
-          font-weight: lighter;
         }
       }
     `}</style>

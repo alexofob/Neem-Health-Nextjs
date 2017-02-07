@@ -40,12 +40,12 @@ const PharmNavBar = inject('store')(observer(({ store }: Props) => (
 
     <Toolbar className="desktop-only" >
       <ToolbarGroup >
-        <Link href="/">
+        <Link href="/"><a>
           <ToolbarTitle
             text="Neem Health"
             style={{ ...styles.brand, color: 'black' }}
           />
-        </Link>
+        </a></Link>
       </ToolbarGroup>
       <ToolbarGroup lastChild>
         <FlatButton label="Log In" />

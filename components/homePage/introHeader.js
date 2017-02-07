@@ -60,10 +60,6 @@ const IntroHeader = () => (
           font-size: 180%;
         }
 
-        p {
-          font-size: 120%;
-        }
-
         .message-image {
           height: 240px;
           width: 320px;
@@ -77,13 +73,7 @@ const IntroHeader = () => (
 
       @media (max-width: 400px) {
 
-        h1 {
-          font-size: 150%;
-        }
-
         p {
-          font-size: 100%;
-          font-weight: lighter;
           padding-top: 3%
         }
 

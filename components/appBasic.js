@@ -55,7 +55,7 @@ export default inject('store')(observer(({ store, children, title = 'Neem Health
           text-decoration: none;
         }
         a:hover {
-          text-decoration: underline;
+          font-weight: bold;
         }
         a:hover[href="/"] {
           text-decoration: none;
