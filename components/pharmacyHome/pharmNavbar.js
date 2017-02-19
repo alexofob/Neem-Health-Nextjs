@@ -12,7 +12,7 @@ import PharmMobilePubNav from './pharmMobilePubNav';
 
 
 type Props = {
-  store: ViewStore,
+  viewStore: ViewStore,
 }
 
 const styles = {
@@ -24,7 +24,7 @@ const styles = {
   },
 };
 
-const PharmNavBar = inject('store')(observer(({ store }: Props) => (
+const PharmNavBar = inject('viewStore')(observer(({ viewStore }: Props) => (
   <div>
     <AppBar
       title={
@@ -34,7 +34,7 @@ const PharmNavBar = inject('store')(observer(({ store }: Props) => (
           Neem Health
         </span>}
       className="mobile-only"
-      onLeftIconButtonTouchTap={store.openDrawer}
+      onLeftIconButtonTouchTap={viewStore.openDrawer}
       // style={{ position: 'fixed', top: 0 }}
     />
 
@@ -49,15 +49,18 @@ const PharmNavBar = inject('store')(observer(({ store }: Props) => (
       </ToolbarGroup>
       <ToolbarGroup lastChild>
         <FlatButton label="Log In" />
-        <RaisedButton label="Get Started" secondary />
+        <RaisedButton
+          label="Get Started" secondary
+          onTouchTap={viewStore.openDialog}
+        />
       </ToolbarGroup>
     </Toolbar>
 
     <Drawer
       docked={false}
       width={250}
-      open={store.drawerOpen}
-      onRequestChange={store.closeDrawer}
+      open={viewStore.drawerOpen}
+      onRequestChange={viewStore.closeDrawer}
     >
       <AppBar
         title={

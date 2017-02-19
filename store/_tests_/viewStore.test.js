@@ -20,4 +20,24 @@ describe('ViewStore', () => {
     store.closeDrawer();
     expect(store.drawerOpen).toBe(false);
   });
+  it('opens dialog', () => {
+    const store = new ViewStore();
+    store.openDialog();
+    expect(store.dialogOpen).toBe(true);
+  });
+  it('closes dialog', () => {
+    const store = new ViewStore();
+    store.closeDialog();
+    expect(store.dialogOpen).toBe(false);
+  });
+  it('shows login dialog', () => {
+    const store = new ViewStore();
+    store.showLoginDialog();
+    expect(store.dialogContent).toBe('login');
+  });
+  it('shows validate login dialog', () => {
+    const store = new ViewStore();
+    store.showValidateLoginDialog();
+    expect(store.dialogContent).toBe('validateLogin');
+  });
 });

@@ -15,12 +15,12 @@ import '../config/tap_events';
 
 
 type Props = {
-  store: ViewStore,
+  viewStore: ViewStore,
   children?: Element<any>,
   title: string,
 }
 
-export default inject('store')(observer(({ store, children, title = 'Neem Health' }: Props) => (
+export default inject('viewStore')(observer(({ viewStore, children, title = 'Neem Health' }: Props) => (
   <div>
     <Head>
       <title>{title}</title>
@@ -31,8 +31,8 @@ export default inject('store')(observer(({ store, children, title = 'Neem Health
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
     </Head>
     <Snackbar
-      open={store.snackbarOpen}
-      message={store.snackbarMessage}
+      open={viewStore.snackbarOpen}
+      message={viewStore.snackbarMessage}
       autoHideDuration={5000}
     />
     {children}

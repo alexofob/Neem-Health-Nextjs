@@ -1,12 +1,32 @@
+import Dialog from 'material-ui/Dialog';
+import { inject, observer } from 'mobx-react';
+
 // imported modules
 import PharmNavbar from './pharmNavbar';
 import PharmHeader from './pharmHeader';
 import TopPharmacies from './topPharmacies';
 import PharmHowItWorks from './pharmHowItWorks';
 import PharmCallToAction from './pharmCallToAction';
+import PwdLessLogin from '../account/pwdlessLogin';
 
+import { ViewStore } from '../../store/viewStore';
 
-const HomePage = () => (
+const styles = {
+  dialogContent: {
+    width: '90%',
+    maxWidth: 420,
+  },
+};
+
+type Props = {
+  viewStore: ViewStore,
+}
+
+const dialogContent = {
+  login: { node: <PwdLessLogin />, title: "Let's get started." },
+};
+
+const HomePage = ({ viewStore }: Props) => (
   <div>
     <main>
       <PharmNavbar />
@@ -21,6 +41,17 @@ const HomePage = () => (
       © Neem Health
     </footer>
 
+    <Dialog
+      title="Let's get started."
+      modal={false}
+      open={viewStore.dialogOpen}
+      onRequestClose={viewStore.closeDialog}
+      contentStyle={styles.dialogContent}
+      autoScrollBodyContent
+    >
+      {dialogContent[viewStore.dialogContent].node}
+    </Dialog>
+
     <style jsx>{`
       .separator {
         opacity: 0.38;
@@ -32,4 +63,4 @@ const HomePage = () => (
   </div>
 );
 
-export default HomePage;
+export default inject('viewStore')(observer(HomePage));

@@ -11,7 +11,7 @@ import MobilePubNav from './mobilePubNav';
 
 
 type Props = {
-  store: ViewStore,
+  viewStore: ViewStore,
 }
 
 const styles = {
@@ -23,7 +23,7 @@ const styles = {
   },
 };
 
-const HomeNavBar = inject('store')(observer(({ store }: Props) => (
+const HomeNavBar = inject('viewStore')(observer(({ viewStore }: Props) => (
   <div>
     <AppBar
       title={
@@ -33,7 +33,7 @@ const HomeNavBar = inject('store')(observer(({ store }: Props) => (
           Neem Health
         </span>}
       className="mobile-only"
-      onLeftIconButtonTouchTap={store.openDrawer}
+      onLeftIconButtonTouchTap={viewStore.openDrawer}
       // style={{ position: 'fixed', top: 0 }}
     />
 
@@ -56,8 +56,8 @@ const HomeNavBar = inject('store')(observer(({ store }: Props) => (
     <Drawer
       docked={false}
       width={250}
-      open={store.drawerOpen}
-      onRequestChange={store.closeDrawer}
+      open={viewStore.drawerOpen}
+      onRequestChange={viewStore.closeDrawer}
     >
       <AppBar
         title={

@@ -9,7 +9,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { teal500, teal700, deepOrangeA200 } from 'material-ui/styles/colors';
 
-import store from '../store/viewStore';
+import * as stores from '../store';
 
 // imported components
 import App from '../components/appBasic';
@@ -33,7 +33,7 @@ export default class extends Component {
 
   render() {
     return (
-      <Provider store={store}>
+      <Provider {...stores}>
         <MuiThemeProvider
           muiTheme={getMuiTheme({
             userAgent: this.props.userAgent,

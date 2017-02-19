@@ -74,7 +74,8 @@ const IntroHeader = () => (
       @media (max-width: 400px) {
 
         p {
-          padding-top: 3%
+          padding-top: 3%;
+          font-size: 100%;
         }
 
         .main-message-wrapper {

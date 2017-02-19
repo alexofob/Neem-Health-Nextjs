@@ -13,7 +13,7 @@ var _classCallCheck2 = require('/Users/alex/Labs/Nextjs/patient/node_modules/bab
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6;
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12;
 
 var _mobx = require('mobx');
 
@@ -71,11 +71,23 @@ var ViewStore = (_class = function ViewStore() {
 
   _initDefineProp(this, 'drawerOpen', _descriptor3, this);
 
-  _initDefineProp(this, 'notifyUser', _descriptor4, this);
+  _initDefineProp(this, 'dialogOpen', _descriptor4, this);
 
-  _initDefineProp(this, 'openDrawer', _descriptor5, this);
+  _initDefineProp(this, 'dialogContent', _descriptor5, this);
 
-  _initDefineProp(this, 'closeDrawer', _descriptor6, this);
+  _initDefineProp(this, 'notifyUser', _descriptor6, this);
+
+  _initDefineProp(this, 'openDrawer', _descriptor7, this);
+
+  _initDefineProp(this, 'closeDrawer', _descriptor8, this);
+
+  _initDefineProp(this, 'openDialog', _descriptor9, this);
+
+  _initDefineProp(this, 'closeDialog', _descriptor10, this);
+
+  _initDefineProp(this, 'showLoginDialog', _descriptor11, this);
+
+  _initDefineProp(this, 'showValidateLoginDialog', _descriptor12, this);
 }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'snackbarOpen', [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
@@ -91,7 +103,17 @@ var ViewStore = (_class = function ViewStore() {
   initializer: function initializer() {
     return false;
   }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, 'notifyUser', [_mobx.action], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, 'dialogOpen', [_mobx.observable], {
+  enumerable: true,
+  initializer: function initializer() {
+    return false;
+  }
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'dialogContent', [_mobx.observable], {
+  enumerable: true,
+  initializer: function initializer() {
+    return 'login';
+  }
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'notifyUser', [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this = this;
@@ -101,7 +123,7 @@ var ViewStore = (_class = function ViewStore() {
       _this.snackbarOpen = true;
     };
   }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'openDrawer', [_mobx.action], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'openDrawer', [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
@@ -110,13 +132,49 @@ var ViewStore = (_class = function ViewStore() {
       return _this2.drawerOpen = true;
     };
   }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'closeDrawer', [_mobx.action], {
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, 'closeDrawer', [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this3 = this;
 
     return function () {
       return _this3.drawerOpen = false;
+    };
+  }
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, 'openDialog', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this4 = this;
+
+    return function () {
+      return _this4.dialogOpen = true;
+    };
+  }
+}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, 'closeDialog', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this5 = this;
+
+    return function () {
+      return _this5.dialogOpen = false;
+    };
+  }
+}), _descriptor11 = _applyDecoratedDescriptor(_class.prototype, 'showLoginDialog', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this6 = this;
+
+    return function () {
+      return _this6.dialogContent = 'login';
+    };
+  }
+}), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, 'showValidateLoginDialog', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this7 = this;
+
+    return function () {
+      return _this7.dialogContent = 'validateLogin';
     };
   }
 })), _class);
@@ -126,4 +184,4 @@ var viewStore = new ViewStore();
 
 exports.default = viewStore;
 exports.ViewStore = ViewStore;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInN0b3JlL3ZpZXdTdG9yZS5qcyJdLCJuYW1lcyI6WyJWaWV3U3RvcmUiLCJtZXNzYWdlIiwic25hY2tiYXJNZXNzYWdlIiwic25hY2tiYXJPcGVuIiwiZHJhd2VyT3BlbiIsInZpZXdTdG9yZSJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFBQTs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7SUFFTUEsUzs7Ozs7Ozs7Ozs7Ozs7Ozs7V0FFZ0MsSzs7Ozs7V0FDRSxHOzs7OztXQUNKLEs7Ozs7Ozs7V0FHYixVQUFDQyxPQUFELEVBQXFCO0FBQ3hDLFlBQUtDLGVBQUwsR0FBdUJELE9BQXZCO0FBQ0EsWUFBS0UsWUFBTCxHQUFvQixJQUFwQjtBQUNELEs7Ozs7Ozs7V0FFb0I7QUFBQSxhQUFPLE9BQUtDLFVBQUwsR0FBa0IsSUFBekI7QUFBQSxLOzs7Ozs7O1dBRUM7QUFBQSxhQUFPLE9BQUtBLFVBQUwsR0FBa0IsS0FBekI7QUFBQSxLOzs7OztBQUd4QixJQUFNQyxZQUFZLElBQUlMLFNBQUosRUFBbEI7O2tCQUVlSyxTO1FBRU5MLFMsR0FBQUEsUyIsImZpbGUiOiJ2aWV3U3RvcmUuanMiLCJzb3VyY2VSb290IjoiL1VzZXJzL2FsZXgvTGFicy9OZXh0anMvcGF0aWVudCIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IG9ic2VydmFibGUsIGFjdGlvbiB9IGZyb20gJ21vYngnO1xuXG5jbGFzcyBWaWV3U3RvcmUge1xuXG4gIEBvYnNlcnZhYmxlIHNuYWNrYmFyT3BlbjogYm9vbGVhbiA9IGZhbHNlO1xuICBAb2JzZXJ2YWJsZSBzbmFja2Jhck1lc3NhZ2U6IHN0cmluZyA9ICcgJztcbiAgQG9ic2VydmFibGUgZHJhd2VyT3BlbjogYm9vbGVhbiA9IGZhbHNlO1xuXG5cbiAgQGFjdGlvbiBub3RpZnlVc2VyID0gKG1lc3NhZ2U6IHN0cmluZykgPT4ge1xuICAgIHRoaXMuc25hY2tiYXJNZXNzYWdlID0gbWVzc2FnZTtcbiAgICB0aGlzLnNuYWNrYmFyT3BlbiA9IHRydWU7XG4gIH1cblxuICBAYWN0aW9uIG9wZW5EcmF3ZXIgPSAoKSA9PiAodGhpcy5kcmF3ZXJPcGVuID0gdHJ1ZSk7XG5cbiAgQGFjdGlvbiBjbG9zZURyYXdlciA9ICgpID0+ICh0aGlzLmRyYXdlck9wZW4gPSBmYWxzZSk7XG59XG5cbmNvbnN0IHZpZXdTdG9yZSA9IG5ldyBWaWV3U3RvcmUoKTtcblxuZXhwb3J0IGRlZmF1bHQgdmlld1N0b3JlO1xuXG5leHBvcnQgeyBWaWV3U3RvcmUgfTtcbiJdfQ==
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInN0b3JlL3ZpZXdTdG9yZS5qcyJdLCJuYW1lcyI6WyJWaWV3U3RvcmUiLCJtZXNzYWdlIiwic25hY2tiYXJNZXNzYWdlIiwic25hY2tiYXJPcGVuIiwiZHJhd2VyT3BlbiIsImRpYWxvZ09wZW4iLCJkaWFsb2dDb250ZW50Iiwidmlld1N0b3JlIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7OztBQUFBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztJQUVNQSxTOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztXQUVnQyxLOzs7OztXQUNFLEc7Ozs7O1dBQ0osSzs7Ozs7V0FDQSxLOzs7OztXQUNFLE87Ozs7Ozs7V0FHZixVQUFDQyxPQUFELEVBQXFCO0FBQ3hDLFlBQUtDLGVBQUwsR0FBdUJELE9BQXZCO0FBQ0EsWUFBS0UsWUFBTCxHQUFvQixJQUFwQjtBQUNELEs7Ozs7Ozs7V0FFb0I7QUFBQSxhQUFPLE9BQUtDLFVBQUwsR0FBa0IsSUFBekI7QUFBQSxLOzs7Ozs7O1dBRUM7QUFBQSxhQUFPLE9BQUtBLFVBQUwsR0FBa0IsS0FBekI7QUFBQSxLOzs7Ozs7O1dBRUQ7QUFBQSxhQUFPLE9BQUtDLFVBQUwsR0FBa0IsSUFBekI7QUFBQSxLOzs7Ozs7O1dBRUM7QUFBQSxhQUFPLE9BQUtBLFVBQUwsR0FBa0IsS0FBekI7QUFBQSxLOzs7Ozs7O1dBRUk7QUFBQSxhQUFPLE9BQUtDLGFBQUwsR0FBcUIsT0FBNUI7QUFBQSxLOzs7Ozs7O1dBRVE7QUFBQSxhQUFPLE9BQUtBLGFBQUwsR0FBcUIsZUFBNUI7QUFBQSxLOzs7OztBQUdwQyxJQUFNQyxZQUFZLElBQUlQLFNBQUosRUFBbEI7O2tCQUVlTyxTO1FBRU5QLFMsR0FBQUEsUyIsImZpbGUiOiJ2aWV3U3RvcmUuanMiLCJzb3VyY2VSb290IjoiL1VzZXJzL2FsZXgvTGFicy9OZXh0anMvcGF0aWVudCIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IG9ic2VydmFibGUsIGFjdGlvbiB9IGZyb20gJ21vYngnO1xuXG5jbGFzcyBWaWV3U3RvcmUge1xuXG4gIEBvYnNlcnZhYmxlIHNuYWNrYmFyT3BlbjogYm9vbGVhbiA9IGZhbHNlO1xuICBAb2JzZXJ2YWJsZSBzbmFja2Jhck1lc3NhZ2U6IHN0cmluZyA9ICcgJztcbiAgQG9ic2VydmFibGUgZHJhd2VyT3BlbjogYm9vbGVhbiA9IGZhbHNlO1xuICBAb2JzZXJ2YWJsZSBkaWFsb2dPcGVuOiBib29sZWFuID0gZmFsc2U7XG4gIEBvYnNlcnZhYmxlIGRpYWxvZ0NvbnRlbnQ6IHN0cmluZyA9ICdsb2dpbic7XG5cblxuICBAYWN0aW9uIG5vdGlmeVVzZXIgPSAobWVzc2FnZTogc3RyaW5nKSA9PiB7XG4gICAgdGhpcy5zbmFja2Jhck1lc3NhZ2UgPSBtZXNzYWdlO1xuICAgIHRoaXMuc25hY2tiYXJPcGVuID0gdHJ1ZTtcbiAgfVxuXG4gIEBhY3Rpb24gb3BlbkRyYXdlciA9ICgpID0+ICh0aGlzLmRyYXdlck9wZW4gPSB0cnVlKTtcblxuICBAYWN0aW9uIGNsb3NlRHJhd2VyID0gKCkgPT4gKHRoaXMuZHJhd2VyT3BlbiA9IGZhbHNlKTtcblxuICBAYWN0aW9uIG9wZW5EaWFsb2cgPSAoKSA9PiAodGhpcy5kaWFsb2dPcGVuID0gdHJ1ZSk7XG5cbiAgQGFjdGlvbiBjbG9zZURpYWxvZyA9ICgpID0+ICh0aGlzLmRpYWxvZ09wZW4gPSBmYWxzZSk7XG5cbiAgQGFjdGlvbiBzaG93TG9naW5EaWFsb2cgPSAoKSA9PiAodGhpcy5kaWFsb2dDb250ZW50ID0gJ2xvZ2luJyk7XG5cbiAgQGFjdGlvbiBzaG93VmFsaWRhdGVMb2dpbkRpYWxvZyA9ICgpID0+ICh0aGlzLmRpYWxvZ0NvbnRlbnQgPSAndmFsaWRhdGVMb2dpbicpO1xufVxuXG5jb25zdCB2aWV3U3RvcmUgPSBuZXcgVmlld1N0b3JlKCk7XG5cbmV4cG9ydCBkZWZhdWx0IHZpZXdTdG9yZTtcblxuZXhwb3J0IHsgVmlld1N0b3JlIH07XG4iXX0=

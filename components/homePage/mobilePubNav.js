@@ -10,32 +10,32 @@ import { ViewStore } from '../../store/viewStore';
 
 
 type Props = {
-  store: ViewStore,
+  viewStore: ViewStore,
 }
 
-const MobilePubNav = inject('store')(observer(({ store }: Props) => (
+const MobilePubNav = inject('viewStore')(observer(({ viewStore }: Props) => (
   <div>
 
     <MenuItem
       primaryText="Log in"
       leftIcon={<MdArrowForward />}
-      onTouchTap={store.closeDrawer}
+      onTouchTap={viewStore.closeDrawer}
     />
     <MenuItem
       primaryText="Sign Up"
       leftIcon={<MdPerson />}
-      onTouchTap={store.closeDrawer}
+      onTouchTap={viewStore.closeDrawer}
     />
     <MenuItem
       primaryText="Search for your Drug"
       leftIcon={<MdSearch />}
-      onTouchTap={store.closeDrawer}
+      onTouchTap={viewStore.closeDrawer}
     />
     <Link href="/pharmacy"><a>
       <MenuItem
         primaryText="For Pharmacies"
         leftIcon={<MdLocalPharmacy />}
-        onTouchTap={store.closeDrawer}
+        onTouchTap={viewStore.closeDrawer}
       />
     </a></Link>
   </div>

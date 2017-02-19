@@ -1,4 +1,7 @@
 import RaisedButton from 'material-ui/RaisedButton';
+import { inject, observer } from 'mobx-react';
+
+import { ViewStore } from '../../store/viewStore';
 
 const style = {
   space: {
@@ -6,13 +9,18 @@ const style = {
   },
 };
 
-const PharmCallToAction = () => (
+type Props = {
+  viewStore: ViewStore,
+}
+
+const PharmCallToAction = ({ viewStore }: Props) => (
   <div className="call-to-action">
     <h1>Get ready to go online</h1>
     <div className="button">
       <RaisedButton
         label="Get Started" secondary
         style={style.space}
+        onTouchTap={viewStore.openDialog}
       />
     </div>
     <style jsx>{`
@@ -41,4 +49,5 @@ const PharmCallToAction = () => (
   </div>
 );
 
-export default PharmCallToAction;
+
+export default inject('viewStore')(observer(PharmCallToAction));
