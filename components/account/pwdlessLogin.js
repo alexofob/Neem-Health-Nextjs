@@ -3,9 +3,15 @@ import TextField from 'material-ui/TextField';
 import FaFacebookOfficial from 'react-icons/lib/fa/facebook-official';
 import FaGoogle from 'react-icons/lib/fa/google';
 import { blue800, fullWhite, grey300 } from 'material-ui/styles/colors';
+import { inject, observer } from 'mobx-react';
 
-import loginFormStore from '../../store/loginFormStore';
+import { LoginForm } from '../../store/loginFormStore';
 import auth0 from '../../store/utils/auth0';
+
+
+type Props = {
+  loginFormStore: LoginForm,
+}
 
 const styles = {
   buttons: {
@@ -20,8 +26,9 @@ const styles = {
   },
 };
 
-const PwdLessLogin = () => {
-  const { name, value, label, sync, error } = loginFormStore.$('email');
+
+const PwdLessLogin = ({ loginFormStore }: Props) => {
+  const field = loginFormStore.$('email');
   return (
     <section role="form" className="signup-form">
       <div className="facebook-login">
@@ -48,12 +55,10 @@ const PwdLessLogin = () => {
       </div>
       <form onSubmit={loginFormStore.handleOnSubmit} >
         <TextField
-          name={name}
-          value={value}
-          floatingLabelText={label}
-          onChange={sync}
+          {...field.bind()}
+          floatingLabelText={field.label}
           fullWidth
-          errorText={error}
+          errorText={field.error}
         /><br />
         <div >
           <RaisedButton
@@ -90,4 +95,5 @@ const PwdLessLogin = () => {
   );
 };
 
-export default PwdLessLogin;
+
+export default inject('loginFormStore')(observer(PwdLessLogin));

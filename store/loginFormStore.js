@@ -6,6 +6,14 @@ import validatorjs from 'validatorjs';
 import auth0 from './utils/auth0.js';
 import { viewStore } from './';
 
+const plugins = { dvr: validatorjs };
+
+const fields = [{
+  name: 'email',
+  label: 'Email',
+  rules: 'required|email|string|between:5,25',
+}];
+
 class LoginForm extends Form {
 
   onSuccess(form) {
@@ -26,15 +34,6 @@ class LoginForm extends Form {
   }
 }
 
-export default
-  new LoginForm({
-    plugins: {
-      dvr: validatorjs,
-    },
-    fields: {
-      email: {
-        label: 'Email',
-        rules: 'required|email|string|between:5,30',
-      },
-    },
-  });
+export default new LoginForm({ fields }, { plugins });
+
+export { LoginForm };
