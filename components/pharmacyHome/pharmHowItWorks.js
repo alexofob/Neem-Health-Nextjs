@@ -2,11 +2,12 @@ import MdSearch from 'react-icons/lib/md/search';
 import FaMoney from 'react-icons/lib/fa/money';
 import MdStore from 'react-icons/lib/md/store';
 import FaFileTextO from 'react-icons/lib/fa/file-text-o';
+import Gx from 'gx';
 
 const PharmHowItWorks = () => (
   <div className="how-it-works">
     <h2>How does it work?</h2>
-    <div className="container">
+    <Gx>
       <div className="message">
         <span className="icon"><MdStore /></span>
         <div className="message-padding">
@@ -24,6 +25,8 @@ const PharmHowItWorks = () => (
           </p>
         </div>
       </div>
+    </Gx>
+    <Gx>
       <div className="message">
         <span className="icon"><MdSearch /></span>
         <div className="message-padding">
@@ -43,24 +46,19 @@ const PharmHowItWorks = () => (
           </p></span>
         </div>
       </div>
-    </div>
+    </Gx>
     <style jsx>{`
       .how-it-works{
         padding: 4% 10%;
       }
       h2 {
         font-weight: normal;
-      }
-      .container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-
+        padding-bottom: 20px;
       }
       .message {
         display: flex;
-        flex: 0 0 50%;
         padding: 4% 4% 4% 0;
+        height: 150px;
       }
       .icon {
         font-size: 48px;
@@ -76,10 +74,6 @@ const PharmHowItWorks = () => (
       }
 
       @media (max-width: 640px) {
-
-        .message {
-          flex: 0 0 100%;
-        }
         p {
           font-size: 90%;
         }

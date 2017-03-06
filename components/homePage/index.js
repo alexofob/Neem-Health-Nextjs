@@ -1,5 +1,6 @@
 import Dialog from 'material-ui/Dialog';
-import { inject, observer } from 'mobx-react';
+import { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
 // imported modules
 import HomeNavbar from './homeNavbar';
@@ -9,8 +10,10 @@ import FeaturedPharmacies from './featuredPharmacies';
 import HowItWorks from './howItWorks';
 import CallToAction from './callToAction';
 import PwdLessLogin from '../account/pwdlessLogin';
+import ValidateLogin from '../account/validateLogin';
 
-import { ViewStore } from '../../store/viewStore';
+import { closeDialog } from '../actions';
+import { sendValidationMail } from '../account/actions';
 
 const styles = {
   dialogContent: {
@@ -19,56 +22,73 @@ const styles = {
   },
 };
 
-type Props = {
-  viewStore: ViewStore,
-}
 
-const dialogContent = {
-  login: { node: <PwdLessLogin />, title: "Let's get started." },
+const HomePage = (props) => {
+  const dialogContent = {
+    login: { node: <PwdLessLogin onSubmit={props.sendValidationMail} />, title: 'Log In' },
+    validateLogin: { node: <ValidateLogin />, title: 'Enter your code to log in' },
+  };
+  return (
+    <div>
+      <main>
+        <section>
+          <HomeNavbar />
+          <IntroHeader />
+        </section>
+        <DrugSearch />
+        <FeaturedPharmacies />
+        <div className="separator"><hr /></div>
+        <HowItWorks />
+        <CallToAction />
+      </main>
+
+      <footer>
+        © Neem Health
+      </footer>
+
+      <Dialog
+        title={dialogContent[props.dialogContent].title}
+        modal={false}
+        open={props.dialogOpen}
+        onRequestClose={props.closeDialog}
+        contentStyle={styles.dialogContent}
+        autoScrollBodyContent
+      >
+        {dialogContent[props.dialogContent].node}
+      </Dialog>
+
+      <style jsx>{`
+        section {
+          background-image: linear-gradient(-90deg, #F7FDFB, #7BB2B7);
+        }
+        .separator {
+          opacity: 0.38;
+          width: 70%;
+          margin: 0 auto;
+        }
+      `}</style>
+
+    </div>
+  );
 };
 
-const HomePage = ({ viewStore }: Props) => (
-  <div>
-    <main>
-      <section>
-        <HomeNavbar />
-        <IntroHeader />
-      </section>
-      <DrugSearch />
-      <FeaturedPharmacies />
-      <div className="separator"><hr /></div>
-      <HowItWorks />
-      <CallToAction />
-    </main>
+HomePage.propTypes = {
+  dialogOpen: PropTypes.bool.isRequired,
+  dialogContent: PropTypes.string.isRequired,
+  sendValidationMail: PropTypes.func.isRequired,
+  closeDialog: PropTypes.func.isRequired,
+};
 
-    <footer>
-      © Neem Health
-    </footer>
 
-    <Dialog
-      title="Let's get started."
-      modal={false}
-      open={viewStore.dialogOpen}
-      onRequestClose={viewStore.closeDialog}
-      contentStyle={styles.dialogContent}
-      autoScrollBodyContent
-    >
-      {dialogContent[viewStore.dialogContent].node}
-    </Dialog>
-
-    <style jsx>{`
-      section {
-        background-image: linear-gradient(-90deg, #F7FDFB, #7BB2B7);
-      }
-      .separator {
-        opacity: 0.38;
-        width: 70%;
-        margin: 0 auto;
-      }
-    `}</style>
-
-  </div>
+const mapDispatchToProps = dispatch => (
+  {
+    closeDialog: () => {
+      dispatch(closeDialog());
+    },
+    sendValidationMail: (email) => {
+      dispatch(sendValidationMail(email));
+    },
+  }
 );
 
-
-export default inject('viewStore')(observer(HomePage));
+export default connect(state => state, mapDispatchToProps)(HomePage);

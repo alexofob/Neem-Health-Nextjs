@@ -1,7 +1,9 @@
+import { PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import { inject, observer } from 'mobx-react';
+import { connect } from 'react-redux';
+import { batchActions } from 'redux-batched-actions';
 
-import { ViewStore } from '../../store/viewStore';
+import { openDialog, setDialogContent } from '../actions';
 
 const style = {
   space: {
@@ -9,19 +11,15 @@ const style = {
   },
 };
 
-type Props = {
-  viewStore: ViewStore,
-}
 
-
-const CallToAction = ({ viewStore }: Props) => (
+const CallToAction = props => (
   <div className="call-to-action">
     <h1>Ready to put your pharmacy online?</h1>
     <div className="button">
       <RaisedButton
         label="Get Started" secondary
         style={style.space}
-        onTouchTap={viewStore.openDialog}
+        onTouchTap={props.openLoginDialog}
       />
     </div>
     <style jsx>{`
@@ -48,4 +46,19 @@ const CallToAction = ({ viewStore }: Props) => (
   </div>
 );
 
-export default inject('viewStore')(observer(CallToAction));
+CallToAction.propTypes = {
+  openLoginDialog: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = dispatch => (
+  {
+    openLoginDialog: () => {
+      dispatch(batchActions([
+        setDialogContent('login'),
+        openDialog(),
+      ]));
+    },
+  }
+);
+
+export default connect(state => state, mapDispatchToProps)(CallToAction);

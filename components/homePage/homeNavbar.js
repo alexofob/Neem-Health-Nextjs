@@ -1,18 +1,13 @@
-import { inject, observer } from 'mobx-react';
+import { PropTypes } from 'react';
 import AppBar from 'material-ui/AppBar';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import FlatButton from 'material-ui/FlatButton';
 import Drawer from 'material-ui/Drawer';
 import Link from 'next/prefetch';
-
-import { ViewStore } from '../../store/viewStore';
+import { connect } from 'react-redux';
 
 import MobilePubNav from './mobilePubNav';
-
-
-type Props = {
-  viewStore: ViewStore,
-}
+import { closeDrawer, openDrawer } from '../actions';
 
 const styles = {
   brand: {
@@ -23,7 +18,7 @@ const styles = {
   },
 };
 
-const HomeNavBar = inject('viewStore')(observer(({ viewStore }: Props) => (
+const HomeNavBar = props => (
   <div>
     <AppBar
       title={
@@ -33,21 +28,21 @@ const HomeNavBar = inject('viewStore')(observer(({ viewStore }: Props) => (
           Neem Health
         </span>}
       className="mobile-only"
-      onLeftIconButtonTouchTap={viewStore.openDrawer}
+      onLeftIconButtonTouchTap={props.openDrawer}
       // style={{ position: 'fixed', top: 0 }}
     />
 
     <Toolbar className="desktop-only" style={{ backgroundColor: 'inherit' }}>
       <ToolbarGroup >
-        <Link href="/">
+        <Link href="/"><a>
           <ToolbarTitle
             text="Neem Health"
             style={{ ...styles.brand, color: 'black' }}
-          />
+          /></a>
         </Link>
       </ToolbarGroup>
       <ToolbarGroup lastChild>
-        <Link href="/pharmacy"><FlatButton label="For Pharmacies" /></Link>
+        <Link href="/pharmacy"><a><FlatButton label="For Pharmacies" /></a></Link>
         <FlatButton label="Log In" />
         <FlatButton label="Sign Up" secondary />
       </ToolbarGroup>
@@ -56,8 +51,8 @@ const HomeNavBar = inject('viewStore')(observer(({ viewStore }: Props) => (
     <Drawer
       docked={false}
       width={250}
-      open={viewStore.drawerOpen}
-      onRequestChange={viewStore.closeDrawer}
+      open={props.drawerOpen}
+      onRequestChange={props.closeDrawer}
     >
       <AppBar
         title={
@@ -68,9 +63,27 @@ const HomeNavBar = inject('viewStore')(observer(({ viewStore }: Props) => (
           </span>}
         showMenuIconButton={false}
       />
-      <MobilePubNav />
+      <MobilePubNav closeDrawer={props.closeDrawer} />
     </Drawer>
   </div>
-)));
+);
 
-export default HomeNavBar;
+HomeNavBar.propTypes = {
+  drawerOpen: PropTypes.bool.isRequired,
+  openDrawer: PropTypes.func.isRequired,
+  closeDrawer: PropTypes.func.isRequired,
+};
+
+
+const mapDispatchToProps = dispatch => (
+  {
+    closeDrawer: () => {
+      dispatch(closeDrawer());
+    },
+    openDrawer: () => {
+      dispatch(openDrawer());
+    },
+  }
+);
+
+export default connect(state => state, mapDispatchToProps)(HomeNavBar);

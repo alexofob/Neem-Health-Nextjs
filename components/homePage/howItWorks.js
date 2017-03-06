@@ -2,11 +2,12 @@ import MdSearch from 'react-icons/lib/md/search';
 import MdAddShoppingCart from 'react-icons/lib/md/add-shopping-cart';
 import MdNotifications from 'react-icons/lib/md/notifications';
 import FaFileTextO from 'react-icons/lib/fa/file-text-o';
+import Gx from 'gx';
 
 const HowItWorks = () => (
   <div className="how-it-works">
     <h2>How does it work?</h2>
-    <div className="container">
+    <Gx>
       <div className="message">
         <span className="icon"><MdSearch /></span>
         <h3>Find</h3>
@@ -19,6 +20,8 @@ const HowItWorks = () => (
         <h3>Buy</h3>
         <p>Walk into the pharmacy and by your drug.</p>
       </div>
+    </Gx>
+    <Gx>
       <div className="message">
         <span className="icon"><MdNotifications /></span>
         <h3>Get Notified</h3>
@@ -35,7 +38,7 @@ const HowItWorks = () => (
           supply your drugs.
         </p></span>
       </div>
-    </div>
+    </Gx>
     <style jsx>{`
       .how-it-works{
         padding: 4% 10%;
@@ -44,19 +47,12 @@ const HowItWorks = () => (
         font-weight: normal;
         text-align: center;
       }
-      .container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-
-      }
       .message {
         display: flex;
         flex-direction: column;
-
         align-items: center;
-        flex: 0 0 50%;
         padding: 8% 5%;
+        height: 200px;
       }
       .icon {
         font-size: 48px;
@@ -72,13 +68,6 @@ const HowItWorks = () => (
       h3 {
         padding: 4% 0 2% 0;
       }
-      @media (max-width: 640px) {
-
-        .message {
-          flex: 0 0 100%;
-        }
-      }
-
     `}</style>
   </div>
 );

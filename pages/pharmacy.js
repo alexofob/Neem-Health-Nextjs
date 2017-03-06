@@ -1,27 +1,18 @@
-// @flow
-/* global navigator */
+/* global navigator window */
 
-import { Component } from 'react';
-import { Provider } from 'mobx-react';
-import { useStrict } from 'mobx';
-
+import { Component, PropTypes } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { teal500, teal700, deepOrangeA200 } from 'material-ui/styles/colors';
-
-import * as stores from '../store';
+import withRedux from 'next-redux-wrapper';
 
 // imported components
 import App from '../components/appBasic';
 import PharmacyHome from '../components/pharmacyHome';
+import initStore from '../store';
+import { getUserProfile } from '../components/account/actions';
 
-useStrict(true);
-
-type Props = {
-  userAgent: string,
-};
-
-export default class extends Component {
+class Pharmacy extends Component {
 
   static async getInitialProps({ req }) {
     return req
@@ -29,35 +20,49 @@ export default class extends Component {
       : { userAgent: navigator.userAgent };
   }
 
-  props: Props;
+  static propTypes = {
+    userAgent: PropTypes.string.isRequired,
+    dispatch: PropTypes.func.isRequired,
+  }
+
+  // Get user profile after user login with Facebook or Google
+  componentDidMount() {
+    const hash = window.location.hash;
+    if (hash) {
+      const accessToken = hash
+        .split('&')[0]
+        .split('=')[1];
+      this.props.dispatch(getUserProfile(accessToken));
+    }
+  }
 
   render() {
     return (
-      <Provider {...stores}>
-        <MuiThemeProvider
-          muiTheme={getMuiTheme({
-            userAgent: this.props.userAgent,
-            palette: {
-              primary1Color: teal500,
-              primary2Color: teal700,
-              accent1Color: deepOrangeA200,
-              pickerHeaderColor: teal500,
-            },
-            appBar: {
-              height: 56,
-              color: '#E8E8E8',
-              textColor: 'black',
-            },
-          }
-          )}
+      <MuiThemeProvider
+        muiTheme={getMuiTheme({
+          userAgent: this.props.userAgent,
+          palette: {
+            primary1Color: teal500,
+            primary2Color: teal700,
+            accent1Color: deepOrangeA200,
+            pickerHeaderColor: teal500,
+          },
+          appBar: {
+            height: 56,
+            color: '#E8E8E8',
+            textColor: 'black',
+          },
+        },
+        )}
+      >
+        <App
+          title="Neem Health - Your online Pharmacy"
         >
-          <App
-            title="Neem Health - Your online Pharmacy"
-          >
-            <PharmacyHome />
-          </App>
-        </MuiThemeProvider>
-      </Provider>
+          <PharmacyHome />
+        </App>
+      </MuiThemeProvider>
     );
   }
 }
+
+export default withRedux(initStore)(Pharmacy);

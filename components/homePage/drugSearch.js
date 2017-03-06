@@ -1,9 +1,11 @@
 import Paper from 'material-ui/Paper';
-import TextField from 'material-ui/TextField';
+import { TextField } from 'redux-form-material-ui';
 import RaisedButton from 'material-ui/RaisedButton';
 import FaSearch from 'react-icons/lib/fa/search';
 import FaFileTextO from 'react-icons/lib/fa/file-text-o';
+import { reduxForm, Field } from 'redux-form';
 
+import { required } from '../../utils/validators';
 
 const style = {
   space: {
@@ -16,13 +18,23 @@ const DrugSearch = () => (
     <div className="centered-container">
       <div className="desktop-only spacing">
         <Paper zDepth={1}>
-          <TextField
+          <Field
+            name="drug"
+            id="drug"
+            component={TextField}
+            type="text"
             floatingLabelText="What Drug?"
             style={style.space}
+            validate={[required]}
           />
-          <TextField
+          <Field
+            name="location"
+            id="location"
+            component={TextField}
+            type="text"
             floatingLabelText="Where?"
             style={style.space}
+            validate={[required]}
           />
           <RaisedButton
             label="Search" secondary
@@ -99,4 +111,7 @@ const DrugSearch = () => (
   </div>
 );
 
-export default DrugSearch;
+// Decorate with redux-form
+export default reduxForm({
+  form: 'searchForm',
+})(DrugSearch);

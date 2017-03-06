@@ -1,7 +1,5 @@
 import RaisedButton from 'material-ui/RaisedButton';
-import { inject, observer } from 'mobx-react';
-
-import { ViewStore } from '../../store/viewStore';
+import { PropTypes } from 'react';
 
 const style = {
   space: {
@@ -9,11 +7,7 @@ const style = {
   },
 };
 
-type Props = {
-  viewStore: ViewStore,
-}
-
-const PharmHeader = ({ viewStore }: Props) => (
+const PharmHeader = props => (
   <div className="intro-header">
     <section role="contentinfo" className="main-message-wrapper">
       <h1 className="main-message">Put your Pharmacy Online</h1>
@@ -25,7 +19,7 @@ const PharmHeader = ({ viewStore }: Props) => (
         label="Get Started" secondary
         style={style.space}
         fullWidth={false}
-        onTouchTap={viewStore.openDialog}
+        onTouchTap={props.openLoginDialog}
       />
     </section>
 
@@ -74,6 +68,8 @@ const PharmHeader = ({ viewStore }: Props) => (
   </div>
 
 );
+PharmHeader.propTypes = {
+  openLoginDialog: PropTypes.func.isRequired,
+};
 
-
-export default inject('viewStore')(observer(PharmHeader));
+export default PharmHeader;

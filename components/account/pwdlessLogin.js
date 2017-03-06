@@ -1,24 +1,21 @@
 import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
+import { TextField } from 'redux-form-material-ui';
 import FaFacebookOfficial from 'react-icons/lib/fa/facebook-official';
 import FaGoogle from 'react-icons/lib/fa/google';
-import { blue800, fullWhite, grey300 } from 'material-ui/styles/colors';
-import { inject, observer } from 'mobx-react';
+import { blue800, fullWhite } from 'material-ui/styles/colors';
+import { reduxForm, Field } from 'redux-form';
+import { PropTypes } from 'react';
 
-import { LoginForm } from '../../store/loginFormStore';
-import auth0 from '../../store/utils/auth0';
+import { required, email } from '../../utils/validators';
 
-
-type Props = {
-  loginFormStore: LoginForm,
-}
+const env = require('../../config/env');
 
 const styles = {
   buttons: {
     height: 50,
+    marginTop: 20,
   },
   facebookButton: {
-    marginTop: 20,
     marginBottom: 10,
   },
   googleButton: {
@@ -27,73 +24,75 @@ const styles = {
 };
 
 
-const PwdLessLogin = ({ loginFormStore }: Props) => {
-  const field = loginFormStore.$('email');
-  return (
-    <section role="form" className="signup-form">
-      <div className="facebook-login">
-        <RaisedButton
-          label="Log in with Facebook"
-          fullWidth
-          onTouchTap={auth0.facebookLogin}
-          icon={<FaFacebookOfficial />}
-          style={{ ...styles.buttons, ...styles.facebookButton }}
-          backgroundColor={blue800}
-          labelStyle={{ color: fullWhite }}
-        />
-      </div>
-      <RaisedButton
-        label="Log in with Google"
+const PwdLessLogin = props => (
+  <section role="form">
+    <RaisedButton
+      label="Log in with Facebook"
+      fullWidth
+      icon={<FaFacebookOfficial />}
+      style={{ ...styles.buttons, ...styles.facebookButton }}
+      backgroundColor={blue800}
+      labelStyle={{ color: fullWhite }}
+      href={`https://${env.AUTH0_DOMAIN}/authorize?response_type=token&client_id=${env.AUTH0_CLIENT_ID}&connection=facebook&redirect_uri=http://localhost:3000/pharmacy&state=STATE&`}
+    />
+    <RaisedButton
+      label="Log in with Google"
+      fullWidth
+      icon={<FaGoogle />}
+      style={{ ...styles.buttons, ...styles.googleButton }}
+      href={`https://${env.AUTH0_DOMAIN}/authorize?response_type=token&client_id=${env.AUTH0_CLIENT_ID}&connection=google-oauth2&redirect_uri=http://localhost:3000/pharmacy&state=STATE&`}
+    />
+    <div className="separator">
+      <span>or</span>
+    </div>
+    <form onSubmit={props.handleSubmit} >
+      <Field
+        name="email"
+        component={TextField}
+        type="text"
+        hintText="Email"
+        floatingLabelText="Email"
         fullWidth
-        onTouchTap={auth0.googleLogin}
-        icon={<FaGoogle />}
-        style={{ ...styles.buttons, ...styles.googleButton }}
-        backgroundColor={grey300}
+        validate={[required, email]}
       />
-      <div className="separator">
-        <span>or</span>
-      </div>
-      <form onSubmit={loginFormStore.handleOnSubmit} >
-        <TextField
-          {...field.bind()}
-          floatingLabelText={field.label}
-          fullWidth
-          errorText={field.error}
-        /><br />
-        <div >
-          <RaisedButton
-            type="submit"
-            secondary
-            fullWidth
-            label="Request Log in Code"
-            disabled={!loginFormStore.isValid}
-            style={styles.buttons}
-          />
+      <RaisedButton
+        type="submit"
+        secondary
+        fullWidth
+        label="Request Log in Code"
+        disabled={props.pristine || props.submitting}
+        style={styles.buttons}
+      />
+    </form>
 
-        </div>
-      </form>
+    <style jsx>{`
+      .separator {
+        width: 100%;
+        border-bottom: 1px solid #60636a;
+        text-align: center;
+        height: 18px;
+        margin-bottom: 15px;
+      }
+      .separator span {
+        line-height: 15px;
+        padding: 0 10px;
+        background: white; /* Color of the element below */
+        display: inline-block;
+        margin-top: 10px;
+        color: #60636a;
+      }
+    `}</style>
 
-      <style jsx>{`
-        .separator {
-          width: 100%;
-          border-bottom: 1px solid #60636a;
-          text-align: center;
-          height: 18px;
-          margin-bottom: 15px;
-        }
-        .separator span {
-          line-height: 15px;
-          padding: 0 10px;
-          background: white; /* Color of the element below */
-          display: inline-block;
-          margin-top: 10px;
-          color: #60636a;
-        }
-      `}</style>
-
-    </section>
+  </section>
   );
+
+PwdLessLogin.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
 };
 
-
-export default inject('loginFormStore')(observer(PwdLessLogin));
+// Decorate with redux-form
+export default reduxForm({
+  form: 'loginForm',
+})(PwdLessLogin);

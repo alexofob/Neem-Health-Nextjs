@@ -1,27 +1,20 @@
-// @flow
+
 /* global navigator */
 
-import { Component } from 'react';
-import { Provider } from 'mobx-react';
-import { useStrict } from 'mobx';
-
+import { Component, PropTypes } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { teal500, teal700, deepOrangeA200 } from 'material-ui/styles/colors';
+import withRedux from 'next-redux-wrapper';
 
-import * as stores from '../store';
+import initStore from '../store';
 
 // imported components
 import App from '../components/appBasic';
 import HomePage from '../components/homePage';
 
-useStrict(true);
 
-type Props = {
-  userAgent: string,
-};
-
-export default class extends Component {
+class Home extends Component {
 
   static async getInitialProps({ req }) {
     return req
@@ -29,33 +22,35 @@ export default class extends Component {
       : { userAgent: navigator.userAgent };
   }
 
-  props: Props;
+  static propTypes = {
+    userAgent: PropTypes.string.isRequired,
+  }
 
   render() {
     return (
-      <Provider {...stores}>
-        <MuiThemeProvider
-          muiTheme={getMuiTheme({
-            userAgent: this.props.userAgent,
-            palette: {
-              primary1Color: teal500,
-              primary2Color: teal700,
-              accent1Color: deepOrangeA200,
-              pickerHeaderColor: teal500,
-            },
-            appBar: {
-              height: 56,
-            },
-          }
-          )}
+      <MuiThemeProvider
+        muiTheme={getMuiTheme({
+          userAgent: this.props.userAgent,
+          palette: {
+            primary1Color: teal500,
+            primary2Color: teal700,
+            accent1Color: deepOrangeA200,
+            pickerHeaderColor: teal500,
+          },
+          appBar: {
+            height: 56,
+          },
+        },
+        )}
+      >
+        <App
+          title="Neem Health - Your online Pharmacy"
         >
-          <App
-            title="Neem Health - Your online Pharmacy"
-          >
-            <HomePage />
-          </App>
-        </MuiThemeProvider>
-      </Provider>
+          <HomePage />
+        </App>
+      </MuiThemeProvider>
     );
   }
 }
+
+export default withRedux(initStore)(Home);

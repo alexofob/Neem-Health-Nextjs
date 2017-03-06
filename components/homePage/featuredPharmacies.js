@@ -53,7 +53,7 @@ const FeaturedPharmacies = () => {
           text-align: center;
         }
         .container {
-          padding: 2% 10%;
+          padding: 10px 30px;
         }
         h3 {
           background: #009688;

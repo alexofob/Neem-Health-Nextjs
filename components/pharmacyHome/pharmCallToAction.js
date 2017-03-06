@@ -1,7 +1,5 @@
+import { PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import { inject, observer } from 'mobx-react';
-
-import { ViewStore } from '../../store/viewStore';
 
 const style = {
   space: {
@@ -9,18 +7,15 @@ const style = {
   },
 };
 
-type Props = {
-  viewStore: ViewStore,
-}
 
-const PharmCallToAction = ({ viewStore }: Props) => (
+const PharmCallToAction = props => (
   <div className="call-to-action">
     <h1>Get ready to go online</h1>
     <div className="button">
       <RaisedButton
         label="Get Started" secondary
         style={style.space}
-        onTouchTap={viewStore.openDialog}
+        onTouchTap={props.openLoginDialog}
       />
     </div>
     <style jsx>{`
@@ -49,5 +44,9 @@ const PharmCallToAction = ({ viewStore }: Props) => (
   </div>
 );
 
+PharmCallToAction.propTypes = {
+  openLoginDialog: PropTypes.func.isRequired,
+};
 
-export default inject('viewStore')(observer(PharmCallToAction));
+
+export default PharmCallToAction;
