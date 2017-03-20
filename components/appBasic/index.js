@@ -2,6 +2,8 @@ import { PropTypes } from 'react';
 import Head from 'next/head';
 import Snackbar from 'material-ui/Snackbar';
 import { connect } from 'react-redux';
+import 'babel-polyfill';
+
 
 import { closeSnackbar } from './actions';
 
@@ -9,24 +11,35 @@ import { closeSnackbar } from './actions';
 
 import '../../config/tap_events';
 
+const env = require('../../config/env');
 
-const AppBasic = props => (
+
+const AppBasic = ({ title, carouselRequired = false, mapRequired = false,
+  snackbarOpen, snackbarMessage, closeSnackbar2, children }) => (
   <div>
     <Head>
-      <title>{props.title || 'Neem Health'}</title>
+      <title>{title || 'Neem Health'}</title>
       <meta charSet="utf-8" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-      <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500' rel='stylesheet" />
-      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
-      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
+      <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" />
+      {carouselRequired &&
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
+      }
+      {carouselRequired &&
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
+      }
+      {mapRequired &&
+        <script
+          src={`https://maps.googleapis.com/maps/api/js?key=${env.MAP_API_KEY}&libraries=places`}
+        />}
     </Head>
     <Snackbar
-      open={props.snackbarOpen}
-      message={props.snackbarMessage}
+      open={snackbarOpen}
+      message={snackbarMessage}
       autoHideDuration={5000}
-      onRequestClose={props.closeSnackbar}
+      onRequestClose={closeSnackbar2}
     />
-    {props.children}
+    {children}
     <style jsx global>{`
         .slick-next::before, .slick-prev::before {
         color: teal;
@@ -87,12 +100,14 @@ AppBasic.propTypes = {
   snackbarOpen: PropTypes.bool.isRequired,
   snackbarMessage: PropTypes.string.isRequired,
   title: PropTypes.string,
-  closeSnackbar: PropTypes.func.isRequired,
+  closeSnackbar2: PropTypes.func.isRequired,
+  mapRequired: PropTypes.bool,
+  carouselRequired: PropTypes.bool,
 };
 
 const mapDispatchToProps = dispatch => (
   {
-    closeSnackbar: () => {
+    closeSnackbar2: () => {
       dispatch(closeSnackbar());
     },
   }

@@ -11,10 +11,12 @@
     "material-ui": "^0.16.7",
     "next": "2.0.0-beta.18",
     "next-redux-wrapper": "^1.0.0",
+    "react-apollo": "^1.0.0-rc.3",
     "react-icons": "^2.2.3",
     "react-redux": "^5.0.2",
     "react-slick": "^0.14.5",
     "react-tap-event-plugin": "^2.0.1",
+    "recompose": "^0.22.0",
     "redux": "^3.6.0",
     "redux-batched-actions": "^0.1.5",
     "redux-form": "^6.5.0",
@@ -26,22 +28,18 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "flow": "flow",
     "start": "next start",
     "test": "jest --watch --env=jsdom"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-jest": "^18.0.0",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-plugin-transform-flow-strip-types": "^6.22.0",
-    "babel-polyfill": "^6.22.0",
+    "babel-polyfill": "^6.23.0",
     "eslint": "^3.14.0",
     "eslint-config-airbnb": "^14.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.9.0",
-    "flow-bin": "^0.38.0",
     "jest": "^18.1.0",
     "redux-devtools-extension": "^2.13.0"
   }

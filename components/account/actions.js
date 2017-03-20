@@ -1,20 +1,14 @@
 /* global window fetch localStorage */
 import 'whatwg-fetch'; // Fetch polyfill for old browsers
 import { batchActions } from 'redux-batched-actions';
+import Router from 'next/router';
 
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, UPDATE_USER } from './actionTypes';
 import { setSnackbarMessage, openSnackbar } from '../appBasic/actions';
 import { setDialogContent, closeDialog } from '../actions';
 
-import isNode from '../../utils/common';
-
 const env = require('../../config/env');
 
-
-// To add to window
-if (!(isNode()) && !window.Promise) {
-  window.Promise = Promise;
-}
 
 export const requestLogin = email => ({
   type: LOGIN_REQUEST,
@@ -42,26 +36,6 @@ const handleError = (err, dispatch, message) => {
     openSnackbar(),
     loginError(err),
   ]));
-};
-
-const getProfile = (accessToken, dispatch) => {     // Get User Profile from the access_token
-  const config = {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-  };
-  return fetch(`https://${env.AUTH0_DOMAIN}/userinfo`, config)
-  .then((response) => {
-    if (response.ok) {
-      return response.json();
-    }
-    const error = new Error(response.statusText);
-    error.response = response;
-    throw error;
-  })
-  .then(user => dispatch(updateUser(user)));
 };
 
 
@@ -133,16 +107,10 @@ export const login = values => (dispatch, getState) => {
 
   return fetch(`https://${env.AUTH0_DOMAIN}/oauth/ro`, config)
     .then(response => response.json())
-    .then(token => token.access_token)
-    .then((accessToken) => {
-      dispatch(batchActions([
-        loginSuccess(),
-        closeDialog(),
-      ]));
-      localStorage.setItem('access_token', accessToken);
-      return accessToken;
+    .then((token) => {
+      dispatch(closeDialog());
+      Router.push(`${env.APP_URL}/getStarted#access_token=${token.access_token}`);
     })
-    .then(accessToken => getProfile(accessToken, dispatch))
     .catch((err) => {
       // If there was a problem, log to console and
       // dispatch the error condition
@@ -150,10 +118,25 @@ export const login = values => (dispatch, getState) => {
     });
 };
 
-export const getUserProfile = token => (dispatch) => {
-  dispatch(loginSuccess());
+export const getUserProfile = accessToken => (dispatch) => {
   // Get User Profile from the access_token
-  getProfile(token, dispatch)
+  const config = {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  };
+  return fetch(`https://${env.AUTH0_DOMAIN}/userinfo`, config)
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    const error = new Error(response.statusText);
+    error.response = response;
+    throw error;
+  })
+  .then(user => dispatch(updateUser(user)))
   .catch((err) => {
     handleError(err, dispatch, 'Get user profile failed, please try again');
   });

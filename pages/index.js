@@ -45,6 +45,7 @@ class Home extends Component {
       >
         <App
           title="Neem Health - Your online Pharmacy"
+          carouselRequired
         >
           <HomePage />
         </App>

@@ -1,5 +1,4 @@
-/* global navigator window */
-
+/* global navigator */
 import { Component, PropTypes } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -10,7 +9,7 @@ import withRedux from 'next-redux-wrapper';
 import App from '../components/appBasic';
 import PharmacyHome from '../components/pharmacyHome';
 import initStore from '../store';
-import { getUserProfile } from '../components/account/actions';
+
 
 class Pharmacy extends Component {
 
@@ -22,18 +21,6 @@ class Pharmacy extends Component {
 
   static propTypes = {
     userAgent: PropTypes.string.isRequired,
-    dispatch: PropTypes.func.isRequired,
-  }
-
-  // Get user profile after user login with Facebook or Google
-  componentDidMount() {
-    const hash = window.location.hash;
-    if (hash) {
-      const accessToken = hash
-        .split('&')[0]
-        .split('=')[1];
-      this.props.dispatch(getUserProfile(accessToken));
-    }
   }
 
   render() {
@@ -57,6 +44,7 @@ class Pharmacy extends Component {
       >
         <App
           title="Neem Health - Your online Pharmacy"
+          carouselRequired
         >
           <PharmacyHome />
         </App>

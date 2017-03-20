@@ -19,5 +19,6 @@ module.exports = {
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "react/react-in-jsx-scope": "off",
         "class-methods-use-this": "warn",
+        "no-unused-prop-types": [0, { skipShapeProps: true }],
     }
 };

@@ -9,6 +9,8 @@ const initialState = {
     email: '',
     picture: '',
     name: '',
+    firstName: '',
+    surname: '',
   },
   errorMessage: '',
 };
