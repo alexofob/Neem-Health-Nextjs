@@ -4,10 +4,11 @@ import { Component, PropTypes } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { teal500, teal700, deepOrangeA200 } from 'material-ui/styles/colors';
-import withRedux from 'next-redux-wrapper';
-import Router from 'next/router';
+import { connect } from 'react-redux';
 
-import initStore from '../store';
+import Router from 'next/router';
+import withData from '../apollo/withData';
+
 import { getUserProfile, loginSuccess } from '../components/account/actions';
 
 
@@ -27,7 +28,8 @@ class GetStarted extends Component {
 
   static propTypes = {
     userAgent: PropTypes.string.isRequired,
-    dispatch: PropTypes.func.isRequired,
+    loginSuccess2: PropTypes.func.isRequired,
+    getUserProfile2: PropTypes.func.isRequired,
   }
 
   // Get user profile after user login with Facebook or Google
@@ -37,10 +39,10 @@ class GetStarted extends Component {
       const accessToken = hash
         .split('&')[0]
         .split('=')[1];
-      this.props.dispatch(loginSuccess());
+      this.props.loginSuccess2();
       localStorage.setItem('access_token', accessToken);
       Router.replace(`${env.APP_URL}/getStarted`);
-      this.props.dispatch(getUserProfile(accessToken));
+      this.props.getUserProfile2(accessToken);
     }
   }
 
@@ -74,4 +76,17 @@ class GetStarted extends Component {
   }
 }
 
-export default withRedux(initStore)(GetStarted);
+const mapDispatchToProps = dispatch => (
+  {
+    loginSuccess2: () => {
+      dispatch(loginSuccess());
+    },
+    getUserProfile2: (accessToken) => {
+      dispatch(getUserProfile(accessToken));
+    },
+  }
+);
+
+const GetStarted2 = connect(null, mapDispatchToProps)(GetStarted);
+
+export default withData(GetStarted2);
