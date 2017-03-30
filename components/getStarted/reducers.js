@@ -1,10 +1,12 @@
-import { SET_LOCATION, SET_AUTOCOMPLETE, UPDATE_BUSS_ADDR,
+import { SET_LOCATION, SET_AUTOCOMPLETE, UPDATE_LOCATION,
   UPDATE_BUSS_INFO, GETSTARTED_STEP1, GETSTARTED_STEP2 } from './actionTypes';
 
-export const location = (state = {}, action) => {
+export const businessLoc = (state = {}, action) => {
   switch (action.type) {
     case SET_LOCATION:
       return action.location;
+    case UPDATE_LOCATION:
+      return action.businessLoc;
     default:
       return state;
   }
@@ -19,19 +21,10 @@ export const autocomplete = (state = {}, action) => {
   }
 };
 
-export const bussinessInfo = (state = {}, action) => {
+export const businessInfo = (state = {}, action) => {
   switch (action.type) {
     case UPDATE_BUSS_INFO:
-      return action.bussInfo;
-    default:
-      return state;
-  }
-};
-
-export const bussinessAddr = (state = {}, action) => {
-  switch (action.type) {
-    case UPDATE_BUSS_ADDR:
-      return action.bussAddr;
+      return action.businessInfo;
     default:
       return state;
   }

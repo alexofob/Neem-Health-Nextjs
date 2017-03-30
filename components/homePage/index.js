@@ -13,7 +13,7 @@ import PwdLessLogin from '../account/pwdlessLogin';
 import ValidateLogin from '../account/validateLogin';
 
 import { closeDialog } from '../actions';
-import { sendValidationMail } from '../account/actions';
+import { sendValidationMail, login } from '../account/actions';
 
 const styles = {
   dialogContent: {
@@ -26,7 +26,7 @@ const styles = {
 const HomePage = (props) => {
   const dialogContent = {
     login: { node: <PwdLessLogin onSubmit={props.sendValidationMail} />, title: 'Log In' },
-    validateLogin: { node: <ValidateLogin />, title: 'Enter your code to log in' },
+    validateLogin: { node: <ValidateLogin onSubmit={props.login} />, title: 'Enter your code to log in' },
   };
   return (
     <div>
@@ -77,6 +77,7 @@ HomePage.propTypes = {
   dialogContent: PropTypes.string.isRequired,
   sendValidationMail: PropTypes.func.isRequired,
   closeDialog: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
 };
 
 
@@ -87,6 +88,9 @@ const mapDispatchToProps = dispatch => (
     },
     sendValidationMail: (email) => {
       dispatch(sendValidationMail(email));
+    },
+    login: (values) => {
+      dispatch(login(values));
     },
   }
 );

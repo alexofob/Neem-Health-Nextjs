@@ -34,13 +34,25 @@ class GetStarted extends Component {
 
   // Get user profile after user login with Facebook or Google
   componentDidMount() {
+    function getParameterByName(name) {
+      const match = RegExp(`[#&]${name}=([^&]*)`).exec(window.location.hash);
+      return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    }
+
+    function getAccessToken() {
+      return getParameterByName('access_token');
+    }
+
+    function getIdToken() {
+      return getParameterByName('id_token');
+    }
+
     const hash = window.location.hash;
     if (hash) {
-      const accessToken = hash
-        .split('&')[0]
-        .split('=')[1];
+      const accessToken = getAccessToken();
+      const idToken = getIdToken();
       this.props.loginSuccess2();
-      localStorage.setItem('access_token', accessToken);
+      localStorage.setItem('id_token', idToken);
       Router.replace(`${env.APP_URL}/getStarted`);
       this.props.getUserProfile2(accessToken);
     }

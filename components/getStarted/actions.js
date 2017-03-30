@@ -1,7 +1,7 @@
 /* global navigator */
 
 import { box, fromNullable } from '../../utils/lib';
-import { SET_LOCATION, SET_AUTOCOMPLETE, UPDATE_BUSS_ADDR,
+import { SET_LOCATION, SET_AUTOCOMPLETE, UPDATE_LOCATION,
   UPDATE_BUSS_INFO, GETSTARTED_STEP1, GETSTARTED_STEP2 } from './actionTypes';
 
 export const setLocation = location => ({
@@ -14,14 +14,14 @@ export const setAutocomplete = autocomplete => ({
   autocomplete,
 });
 
-export const updateBusinessInfo = bussInfo => ({
+export const updateBusinessInfo = businessInfo => ({
   type: UPDATE_BUSS_INFO,
-  bussInfo,
+  businessInfo,
 });
 
-export const updateBusinessAddr = bussAddr => ({
-  type: UPDATE_BUSS_ADDR,
-  bussAddr,
+export const updateBusinessAddr = businessLoc => ({
+  type: UPDATE_LOCATION,
+  businessLoc,
 });
 
 export const getStartedStep1 = () => ({
@@ -90,4 +90,9 @@ export const geolocate = () => (dispatch, getState) => {
     autocomplete.setBounds(circle.getBounds());
     dispatch(setAutocomplete(autocomplete));
   }));
+};
+
+export const saveBusinessInfo = bussAddr => (dispatch, getState) => {
+  const { businessInfo } = getState();
+  dispatch(updateBusinessAddr(bussAddr));
 };

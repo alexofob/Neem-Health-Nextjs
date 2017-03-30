@@ -109,7 +109,7 @@ export const login = values => (dispatch, getState) => {
     .then(response => response.json())
     .then((token) => {
       dispatch(closeDialog());
-      Router.push(`${env.APP_URL}/getStarted#access_token=${token.access_token}`);
+      Router.push(`${env.APP_URL}/getStarted#access_token=${token.access_token}&id_token=${token.id_token}`);
     })
     .catch((err) => {
       // If there was a problem, log to console and

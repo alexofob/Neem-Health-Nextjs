@@ -6,20 +6,20 @@ import { batchActions } from 'redux-batched-actions';
 import Navbar from './navbar';
 import GetStartedForm from './getStartedForm';
 import { updateBusinessInfo as updateInfo,
-  updateBusinessAddr as updateAddr,
+  saveBusinessInfo as saveBusiInfo,
   getStartedStep2, getStartedStep1 as step1,
  } from './actions';
 
 
 const GetStartedPage = ({ firstName, updateBusinessInfo,
-  updateBusinessAddr, getStartedStep1, getStartedStep }) => (
+  saveBusinessInfo, getStartedStep1, getStartedStep }) => (
   <div>
     <main>
       <Navbar />
       <GetStartedForm
         firstName={firstName}
         updateBusinessInfo={updateBusinessInfo}
-        updateBusinessAddr={updateBusinessAddr}
+        saveBusinessInfo={saveBusinessInfo}
         getStartedStep1={getStartedStep1}
         getStartedStep={getStartedStep}
       />
@@ -41,7 +41,7 @@ const GetStartedPage = ({ firstName, updateBusinessInfo,
 GetStartedPage.propTypes = {
   firstName: PropTypes.string.isRequired,
   updateBusinessInfo: PropTypes.func.isRequired,
-  updateBusinessAddr: PropTypes.func.isRequired,
+  saveBusinessInfo: PropTypes.func.isRequired,
   getStartedStep1: PropTypes.func.isRequired,
   getStartedStep: PropTypes.string.isRequired,
 };
@@ -54,10 +54,10 @@ const mapDispatchToProps = dispatch => (
         getStartedStep2(),
       ]));
     },
-    updateBusinessAddr: (bussAddr) => {
-      dispatch(batchActions([
-        updateAddr(bussAddr),
-      ]));
+    saveBusinessInfo: (bussAddr) => {
+      dispatch(
+        saveBusiInfo(bussAddr),
+      );
     },
     getStartedStep1: () => {
       dispatch(step1());

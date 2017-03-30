@@ -1,14 +1,14 @@
 import 'isomorphic-fetch';
 import React, { PropTypes } from 'react';
 import { ApolloProvider, getDataFromTree } from 'react-apollo';
-import { initClient } from './initClient';
+import initClient from './initClient';
 import initStore from './initStore';
 
 export default Component => (
   class extends React.Component {
     static async getInitialProps(ctx) {
       const headers = ctx.req ? ctx.req.headers : {};
-      const client = initClient(headers);
+      const client = initClient();
       const store = initStore(client, client.initialState);
 
       const props = {
@@ -40,13 +40,12 @@ export default Component => (
     }
 
     static propTypes = {
-      headers: PropTypes.object,
       initialState: PropTypes.object,
     }
 
     constructor(props) {
       super(props);
-      this.client = initClient(this.props.headers);
+      this.client = initClient();
       this.store = initStore(this.client, this.props.initialState);
     }
 

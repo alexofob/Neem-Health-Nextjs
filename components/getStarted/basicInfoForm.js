@@ -85,4 +85,4 @@ BasicInfoForm = reduxForm({
   keepDirtyOnReinitialize: true,
 })(BasicInfoForm);
 
-export default connect(state => ({ initialValues: state.bussinessInfo }))(BasicInfoForm);
+export default connect(state => ({ initialValues: state.businessInfo }))(BasicInfoForm);

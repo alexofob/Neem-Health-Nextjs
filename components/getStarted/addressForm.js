@@ -152,6 +152,6 @@ const AddressForm2 = reduxForm({
 
 export default connect(
   state => ({
-    initialValues: state.location,
+    initialValues: state.businessLoc,
   }),
   mapDispatchToProps)(AddressForm2);

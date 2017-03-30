@@ -7,14 +7,14 @@ import BasicInfoForm from './basicInfoForm';
 import AddressForm from './addressForm';
 
 const GetStartedForm = (props) => {
-  const { updateBusinessInfo, updateBusinessAddr,
+  const { updateBusinessInfo, saveBusinessInfo,
     getStartedStep1, firstName, getStartedStep } = props;
   const Form = {
     basicInfo: <BasicInfoForm
       onSubmit={updateBusinessInfo}
     />,
     address: <AddressForm
-      onSubmit={updateBusinessAddr}
+      onSubmit={saveBusinessInfo}
       getStartedStep1={getStartedStep1}
     />,
   };
@@ -97,7 +97,7 @@ const GetStartedForm = (props) => {
 GetStartedForm.propTypes = {
   firstName: PropTypes.string.isRequired,
   updateBusinessInfo: PropTypes.func.isRequired,
-  updateBusinessAddr: PropTypes.func.isRequired,
+  saveBusinessInfo: PropTypes.func.isRequired,
   getStartedStep1: PropTypes.func.isRequired,
   getStartedStep: PropTypes.string.isRequired,
 };
