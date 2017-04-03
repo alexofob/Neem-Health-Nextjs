@@ -1,20 +1,16 @@
-import { OPEN_SNACKBAR, SET_SNACKBAR_MESSAGE, CLOSE_SNACKBAR } from './actionTypes';
+import { OPEN_SNACKBAR, CLOSE_SNACKBAR } from './actionTypes';
 
-export const snackbarOpen = (state = false, action) => {
-  switch (action.type) {
-    case OPEN_SNACKBAR:
-      return true;
-    case CLOSE_SNACKBAR:
-      return false;
-    default:
-      return state;
-  }
+const initialSnackbarState = {
+  open: false,
+  message: '',
 };
 
-export const snackbarMessage = (state = ' ', action) => {
+export const snackbar = (state = initialSnackbarState, action) => {
   switch (action.type) {
-    case SET_SNACKBAR_MESSAGE:
-      return action.message;
+    case OPEN_SNACKBAR:
+      return { ...state, open: true, message: action.message };
+    case CLOSE_SNACKBAR:
+      return { ...state, open: false };
     default:
       return state;
   }

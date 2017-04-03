@@ -22,11 +22,13 @@ const styles = {
   },
 };
 
-
 const HomePage = (props) => {
   const dialogContent = {
     login: { node: <PwdLessLogin onSubmit={props.sendValidationMail} />, title: 'Log In' },
-    validateLogin: { node: <ValidateLogin onSubmit={props.login} />, title: 'Enter your code to log in' },
+    validateLogin: {
+      node: <ValidateLogin onSubmit={props.login} />,
+      title: 'Enter your code to log in',
+    },
   };
   return (
     <div>
@@ -57,7 +59,9 @@ const HomePage = (props) => {
         {dialogContent[props.dialogContent].node}
       </Dialog>
 
-      <style jsx>{`
+      <style jsx>
+        {
+          `
         section {
           background-image: linear-gradient(-90deg, #F7FDFB, #7BB2B7);
         }
@@ -66,7 +70,9 @@ const HomePage = (props) => {
           width: 70%;
           margin: 0 auto;
         }
-      `}</style>
+      `
+        }
+      </style>
 
     </div>
   );
@@ -80,19 +86,21 @@ HomePage.propTypes = {
   login: PropTypes.func.isRequired,
 };
 
+const mapStateToProps = state => ({
+  dialogOpen: state.dialog.open,
+  dialogContent: state.dialog.content,
+});
 
-const mapDispatchToProps = dispatch => (
-  {
-    closeDialog: () => {
-      dispatch(closeDialog());
-    },
-    sendValidationMail: (email) => {
-      dispatch(sendValidationMail(email));
-    },
-    login: (values) => {
-      dispatch(login(values));
-    },
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  closeDialog: () => {
+    dispatch(closeDialog());
+  },
+  sendValidationMail: (email) => {
+    dispatch(sendValidationMail(email));
+  },
+  login: (values) => {
+    dispatch(login(values));
+  },
+});
 
-export default connect(state => state, mapDispatchToProps)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

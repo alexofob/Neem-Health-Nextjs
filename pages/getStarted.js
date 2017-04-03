@@ -5,12 +5,14 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { teal500, teal700, deepOrangeA200 } from 'material-ui/styles/colors';
 import { connect } from 'react-redux';
-
 import Router from 'next/router';
+import { gql, graphql } from 'react-apollo';
+
 import withData from '../apollo/withData';
 
-import { getUserProfile, loginSuccess } from '../components/account/actions';
-
+import { getUserProfile, loginSuccess, loginFailed } from '../components/account/actions';
+import { notifyUser } from '../components/appBasic/actions';
+import { openDialog } from '../components/actions';
 
 // imported components
 import App from '../components/appBasic';
@@ -19,42 +21,40 @@ import GetStartedPage from '../components/getStarted';
 const env = require('../config/env');
 
 class GetStarted extends Component {
-
-  static async getInitialProps({ req }) {
-    return req
-      ? { userAgent: req.headers['user-agent'] }
-      : { userAgent: navigator.userAgent };
-  }
-
   static propTypes = {
+    idToken: PropTypes.string,
     userAgent: PropTypes.string.isRequired,
-    loginSuccess2: PropTypes.func.isRequired,
-    getUserProfile2: PropTypes.func.isRequired,
-  }
+    getUserProfile: PropTypes.func.isRequired,
+    accessToken: PropTypes.string,
+    loginError: PropTypes.string,
+    loginSuccess: PropTypes.func.isRequired,
+    loginFailed: PropTypes.func.isRequired,
+    notifyUser: PropTypes.func.isRequired,
+    openDialog: PropTypes.func.isRequired,
+    data: PropTypes.object.isRequired,
+  };
 
-  // Get user profile after user login with Facebook or Google
   componentDidMount() {
-    function getParameterByName(name) {
-      const match = RegExp(`[#&]${name}=([^&]*)`).exec(window.location.hash);
-      return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-    }
-
-    function getAccessToken() {
-      return getParameterByName('access_token');
-    }
-
-    function getIdToken() {
-      return getParameterByName('id_token');
-    }
-
-    const hash = window.location.hash;
-    if (hash) {
-      const accessToken = getAccessToken();
-      const idToken = getIdToken();
-      this.props.loginSuccess2();
-      localStorage.setItem('id_token', idToken);
+    // User has already signed up
+    if (this.props.accessToken && this.props.data.user) {
       Router.replace(`${env.APP_URL}/getStarted`);
-      this.props.getUserProfile2(accessToken);
+      this.props.getUserProfile(this.props.accessToken);
+      localStorage.setItem('id_token', this.props.idToken);
+      this.props.loginSuccess();
+      // User is logging in for the first time and needs to sign up
+    } else if (this.props.accessToken && !this.props.data.user) {
+      Router.replace(`${env.APP_URL}/getStarted`);
+      this.props.getUserProfile(this.props.accessToken);
+      localStorage.setItem('id_token', this.props.idToken);
+      this.props.openDialog('createUser');
+    } else if (this.props.loginFailed) {
+      // Login failed.
+      this.props.loginFailed(this.props.loginError);
+      this.props.notifyUser('Login Failed, Please try again.');
+      this.props.openDialog('login');
+    } else {
+      // User is accessing the page directly without first logging in
+      this.props.openDialog('login');
     }
   }
 
@@ -74,31 +74,46 @@ class GetStarted extends Component {
             color: '#E8E8E8',
             textColor: 'black',
           },
-        },
-        )}
+        })}
       >
-        <App
-          title="Neem Health - Get Started"
-          mapRequired
-        >
-          <GetStartedPage />
+        <App title="Neem Health - Get Started" mapRequired>
+          <GetStartedPage data={this.props.data} />
         </App>
       </MuiThemeProvider>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => (
-  {
-    loginSuccess2: () => {
-      dispatch(loginSuccess());
-    },
-    getUserProfile2: (accessToken) => {
-      dispatch(getUserProfile(accessToken));
-    },
+const userQuery = gql`
+  query {
+    user {
+      id,
+      firstname,
+      surname
+    }
   }
+`;
+
+const mapDispatchToProps = dispatch => ({
+  loginSuccess: () => {
+    dispatch(loginSuccess());
+  },
+  getUserProfile: (accessToken) => {
+    dispatch(getUserProfile(accessToken));
+  },
+  loginFailed: (error) => {
+    dispatch(loginFailed(error));
+  },
+  notifyUser: (message) => {
+    dispatch(notifyUser(message));
+  },
+  openDialog: (content) => {
+    dispatch(openDialog(content));
+  },
+});
+
+export default withData(
+  connect(null, mapDispatchToProps)(
+    graphql(userQuery, { options: { fetchPolicy: 'network-only' } })(GetStarted),
+  ),
 );
-
-const GetStarted2 = connect(null, mapDispatchToProps)(GetStarted);
-
-export default withData(GetStarted2);

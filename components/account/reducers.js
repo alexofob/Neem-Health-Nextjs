@@ -1,5 +1,10 @@
 import {
-  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS, UPDATE_USER,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGIN_FAILURE,
+  LOGOUT_SUCCESS,
+  UPDATE_USER,
+  SET_IDTOKEN,
 } from './actionTypes';
 
 const initialState = {
@@ -12,7 +17,8 @@ const initialState = {
     firstName: '',
     surname: '',
   },
-  errorMessage: '',
+  errorMessage: {},
+  idToken: '',
 };
 
 // The auth reducer.
@@ -32,7 +38,7 @@ const auth = (state = initialState, action) => {
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: false,
-        errorMessage: action.message,
+        errorMessage: action.error,
       });
     case LOGOUT_SUCCESS:
       return Object.assign({}, state, {
@@ -41,12 +47,18 @@ const auth = (state = initialState, action) => {
       });
     case UPDATE_USER:
       return Object.assign({}, state, {
-        user: { email: action.user.email,
-                picture: action.user.picture,
-                name: action.user.name,
-                firstName: action.user.given_name || '',
-                surname: action.user.family_name || '',
-              } });
+        user: {
+          email: action.user.email,
+          picture: action.user.picture,
+          name: action.user.name,
+          firstName: action.user.given_name || '',
+          surname: action.user.family_name || '',
+        },
+      });
+    case SET_IDTOKEN:
+      return Object.assign({}, state, {
+        idToken: action.idToken,
+      });
     default:
       return state;
   }

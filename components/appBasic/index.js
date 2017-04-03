@@ -4,30 +4,47 @@ import Snackbar from 'material-ui/Snackbar';
 import { connect } from 'react-redux';
 import 'babel-polyfill';
 
-
-import { closeSnackbar } from './actions';
-
 // imported modules
 
 import '../../config/tap_events';
+import { closeSnackbar } from './actions';
+
+require('es6-promise').polyfill();
 
 const env = require('../../config/env');
 
-
-const AppBasic = ({ title, carouselRequired = false, mapRequired = false,
-  snackbarOpen, snackbarMessage, closeSnackbar2, children }) => (
+const AppBasic = (
+  {
+    title,
+    carouselRequired = false,
+    mapRequired = false,
+    snackbarOpen,
+    snackbarMessage,
+    closeSnackbar2,
+    children,
+  },
+) => (
   <div>
     <Head>
       <title>{title || 'Neem Health'}</title>
       <meta charSet="utf-8" />
-      <meta name="viewport" content="initial-scale=1.0, width=device-width maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+      <meta
+        name="viewport"
+        content="initial-scale=1.0, width=device-width maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+      />
       <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" />
       {carouselRequired &&
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
-      }
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
+        />}
       {carouselRequired &&
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
-      }
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
+        />}
       {mapRequired &&
         <script
           src={`https://maps.googleapis.com/maps/api/js?key=${env.MAP_API_KEY}&libraries=places`}
@@ -40,7 +57,9 @@ const AppBasic = ({ title, carouselRequired = false, mapRequired = false,
       onRequestClose={closeSnackbar2}
     />
     {children}
-    <style jsx global>{`
+    <style jsx global>
+      {
+        `
         .slick-next::before, .slick-prev::before {
         color: teal;
         }
@@ -90,9 +109,10 @@ const AppBasic = ({ title, carouselRequired = false, mapRequired = false,
             display: flex !important;
           }
         }
-      `}</style>
+      `
+      }
+    </style>
   </div>
-
 );
 
 AppBasic.propTypes = {
@@ -105,12 +125,15 @@ AppBasic.propTypes = {
   carouselRequired: PropTypes.bool,
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    closeSnackbar2: () => {
-      dispatch(closeSnackbar());
-    },
-  }
-);
+const mapStateToProps = state => ({
+  snackbarOpen: state.snackbar.open,
+  snackbarMessage: state.snackbar.message,
+});
 
-export default connect(state => state, mapDispatchToProps)(AppBasic);
+const mapDispatchToProps = dispatch => ({
+  closeSnackbar2: () => {
+    dispatch(closeSnackbar());
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppBasic);

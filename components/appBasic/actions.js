@@ -1,11 +1,7 @@
-import { OPEN_SNACKBAR, SET_SNACKBAR_MESSAGE, CLOSE_SNACKBAR } from './actionTypes';
+import { OPEN_SNACKBAR, CLOSE_SNACKBAR } from './actionTypes';
 
-export const openSnackbar = () => ({
+export const notifyUser = message => ({
   type: OPEN_SNACKBAR,
-});
-
-export const setSnackbarMessage = message => ({
-  type: SET_SNACKBAR_MESSAGE,
   message,
 });
 

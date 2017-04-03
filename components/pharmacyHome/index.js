@@ -12,7 +12,7 @@ import TopPharmacies from './topPharmacies';
 import PharmHowItWorks from './pharmHowItWorks';
 import PharmCallToAction from './pharmCallToAction';
 import PwdLessLogin from '../account/pwdlessLogin';
-import { closeDialog, openDialog, setDialogContent, closeDrawer } from '../actions';
+import { closeDialog, openDialog, closeDrawer } from '../actions';
 import ValidateLogin from '../account/validateLogin';
 
 const styles = {
@@ -24,14 +24,20 @@ const styles = {
 
 const HomePage = (props) => {
   const dialogContent = {
-    login: { node: <PwdLessLogin
-      onSubmit={props.sendValidationMail}
-      facebookLogin={props.facebookLogin}
-      googleLogin={props.googleLogin}
-    />,
-    title: 'Log In' },
-    validateLogin: { node: <ValidateLogin onSubmit={props.login} />,
-                     title: 'Enter your code to log in' },
+    login: {
+      node: (
+        <PwdLessLogin
+          onSubmit={props.sendValidationMail}
+          facebookLogin={props.facebookLogin}
+          googleLogin={props.googleLogin}
+        />
+      ),
+      title: 'Log In',
+    },
+    validateLogin: {
+      node: <ValidateLogin onSubmit={props.login} />,
+      title: 'Enter your code to log in',
+    },
   };
   return (
     <div>
@@ -59,13 +65,17 @@ const HomePage = (props) => {
         {dialogContent[props.dialogContent].node}
       </Dialog>
 
-      <style jsx>{`
+      <style jsx>
+        {
+          `
         .separator {
           opacity: 0.38;
           width: 70%;
           margin: 0 auto;
         }
-      `}</style>
+      `
+        }
+      </style>
 
     </div>
   );
@@ -82,32 +92,30 @@ HomePage.propTypes = {
   googleLogin: PropTypes.func.isRequired,
 };
 
+const mapStateToProps = state => ({
+  dialogOpen: state.dialog.open,
+  dialogContent: state.dialog.content,
+});
 
-const mapDispatchToProps = dispatch => (
-  {
-    closeDialog: () => {
-      dispatch(closeDialog());
-    },
-    sendValidationMail: (email) => {
-      dispatch(sendValidationMail(email));
-    },
-    openLoginDialog: () => {
-      dispatch(batchActions([
-        setDialogContent('login'),
-        closeDrawer(),
-        openDialog(),
-      ]));
-    },
-    login: (code) => {
-      dispatch(login(code));
-    },
-    facebookLogin: () => {
-      dispatch(facebookLogin());
-    },
-    googleLogin: () => {
-      dispatch(googleLogin());
-    },
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  closeDialog: () => {
+    dispatch(closeDialog());
+  },
+  sendValidationMail: (email) => {
+    dispatch(sendValidationMail(email));
+  },
+  openLoginDialog: () => {
+    dispatch(batchActions([closeDrawer(), openDialog('login')]));
+  },
+  login: (code) => {
+    dispatch(login(code));
+  },
+  facebookLogin: () => {
+    dispatch(facebookLogin());
+  },
+  googleLogin: () => {
+    dispatch(googleLogin());
+  },
+});
 
-export default connect(state => state, mapDispatchToProps)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

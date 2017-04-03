@@ -3,7 +3,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
 import { batchActions } from 'redux-batched-actions';
 
-import { openDialog, setDialogContent } from '../actions';
+import { openDialog } from '../actions';
 
 const style = {
   space: {
@@ -11,18 +11,20 @@ const style = {
   },
 };
 
-
 const CallToAction = props => (
   <div className="call-to-action">
     <h1>Ready to put your pharmacy online?</h1>
     <div className="button">
       <RaisedButton
-        label="Get Started" secondary
+        label="Get Started"
+        secondary
         style={style.space}
         onTouchTap={props.openLoginDialog}
       />
     </div>
-    <style jsx>{`
+    <style jsx>
+      {
+        `
       .call-to-action {
         background-color: teal;
         padding: 6% 10%;
@@ -42,7 +44,9 @@ const CallToAction = props => (
         }
 
       }
-    `}</style>
+    `
+      }
+    </style>
   </div>
 );
 
@@ -50,15 +54,10 @@ CallToAction.propTypes = {
   openLoginDialog: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    openLoginDialog: () => {
-      dispatch(batchActions([
-        setDialogContent('login'),
-        openDialog(),
-      ]));
-    },
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  openLoginDialog: () => {
+    dispatch(batchActions([openDialog('login')]));
+  },
+});
 
 export default connect(state => state, mapDispatchToProps)(CallToAction);

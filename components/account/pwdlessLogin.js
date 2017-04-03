@@ -33,14 +33,14 @@ const PwdLessLogin = props => (
       style={{ ...styles.buttons, ...styles.facebookButton }}
       backgroundColor={blue800}
       labelStyle={{ color: fullWhite }}
-      href={`https://${env.AUTH0_DOMAIN}/authorize?response_type=id_token%20token&client_id=${env.AUTH0_CLIENT_ID}&connection=facebook&redirect_uri=${env.APP_URL}/getStarted&state=STATE&nonce=NONCEALEX&`}
+      href={`https://${env.AUTH0_DOMAIN}/authorize?scope=openid%20profile%20offline_access&response_type=code&client_id=${env.AUTH0_CLIENT_ID}&connection=facebook&redirect_uri=${env.APP_URL}/getStarted&state=STATE&`}
     />
     <RaisedButton
       label="Log in with Google"
       fullWidth
       icon={<FaGoogle />}
       style={{ ...styles.buttons, ...styles.googleButton }}
-      href={`https://${env.AUTH0_DOMAIN}/authorize?response_type=id_token%20token&client_id=${env.AUTH0_CLIENT_ID}&connection=google-oauth2&redirect_uri=${env.APP_URL}/getStarted&state=STATE&nonce=NONCEALEX&`}
+      href={`https://${env.AUTH0_DOMAIN}/authorize?scope=openid%20profile%20offline_access&response_type=code&client_id=${env.AUTH0_CLIENT_ID}&connection=google-oauth2&redirect_uri=${env.APP_URL}/getStarted&state=STATE&`}
     />
     <div className="separator">
       <span>or</span>

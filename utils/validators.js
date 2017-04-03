@@ -23,6 +23,8 @@ export const maxLength6 = maxLength(6);
 
 export const minLength3 = minLength(3);
 
+export const minLength2 = minLength(2);
+
 export const number = value => (
   value && isNaN(Number(value)) ? 'Must be a number' : undefined
 );
