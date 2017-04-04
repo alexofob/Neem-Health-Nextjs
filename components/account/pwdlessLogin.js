@@ -1,3 +1,4 @@
+/* global window */
 import RaisedButton from 'material-ui/RaisedButton';
 import { TextField } from 'redux-form-material-ui';
 import FaFacebookOfficial from 'react-icons/lib/fa/facebook-official';
@@ -5,8 +6,10 @@ import FaGoogle from 'react-icons/lib/fa/google';
 import { blue800, fullWhite } from 'material-ui/styles/colors';
 import { reduxForm, Field } from 'redux-form';
 import { PropTypes } from 'react';
+import uuid from 'uuid';
 
 import { required, email } from '../../utils/validators';
+import { setSecret, getBaseUrl } from '../../utils/auth';
 
 const env = require('../../config/env');
 
@@ -23,6 +26,8 @@ const styles = {
   },
 };
 
+const secret = uuid.v4();
+setSecret(secret);
 
 const PwdLessLogin = props => (
   <section role="form">
@@ -33,19 +38,23 @@ const PwdLessLogin = props => (
       style={{ ...styles.buttons, ...styles.facebookButton }}
       backgroundColor={blue800}
       labelStyle={{ color: fullWhite }}
-      href={`https://${env.AUTH0_DOMAIN}/authorize?scope=openid%20profile%20offline_access&response_type=code&client_id=${env.AUTH0_CLIENT_ID}&connection=facebook&redirect_uri=${env.APP_URL}/getStarted&state=STATE&`}
+      href={
+        `https://${env.AUTH0_DOMAIN}/authorize?scope=openid%20profile%20email&response_type=id_token&client_id=${env.AUTH0_CLIENT_ID}&connection=facebook&redirect_uri=${getBaseUrl()}/auth/signed-in&state=${secret}&nonce=${secret}&`
+      }
     />
     <RaisedButton
       label="Log in with Google"
       fullWidth
       icon={<FaGoogle />}
       style={{ ...styles.buttons, ...styles.googleButton }}
-      href={`https://${env.AUTH0_DOMAIN}/authorize?scope=openid%20profile%20offline_access&response_type=code&client_id=${env.AUTH0_CLIENT_ID}&connection=google-oauth2&redirect_uri=${env.APP_URL}/getStarted&state=STATE&`}
+      href={
+        `https://${env.AUTH0_DOMAIN}/authorize?scope=openid%20profile%20email&response_type=id_token&client_id=${env.AUTH0_CLIENT_ID}&connection=google-oauth2&redirect_uri=${getBaseUrl()}/auth/signed-in&state=${secret}&nonce=${secret}&`
+      }
     />
     <div className="separator">
       <span>or</span>
     </div>
-    <form onSubmit={props.handleSubmit} >
+    <form onSubmit={props.handleSubmit}>
       <Field
         name="email"
         component={TextField}
@@ -65,7 +74,9 @@ const PwdLessLogin = props => (
       />
     </form>
 
-    <style jsx>{`
+    <style jsx>
+      {
+        `
       .separator {
         width: 100%;
         border-bottom: 1px solid #60636a;
@@ -81,7 +92,9 @@ const PwdLessLogin = props => (
         margin-top: 10px;
         color: #60636a;
       }
-    `}</style>
+    `
+      }
+    </style>
 
   </section>
 );

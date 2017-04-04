@@ -4,22 +4,27 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'react';
 import { batchActions } from 'redux-batched-actions';
 import Dialog from 'material-ui/Dialog';
-import { gql, graphql, compose } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 
-// imported modules
+// imported componets
 import Navbar from './navbar';
 import GetStartedForm from './getStartedForm';
+import CreateUser from '../account/createUser';
+import PwdLessLogin from '../account/pwdlessLogin';
+import ValidateLogin from '../account/validateLogin';
+
+// imported actions
 import {
   updateBusinessInfo as updateInfo,
   saveBusinessInfo as saveBusiInfo,
   getStartedStep2,
   getStartedStep1 as step1,
 } from './actions';
-import CreateUser from '../account/createUser';
-import PwdLessLogin from '../account/pwdlessLogin';
-import ValidateLogin from '../account/validateLogin';
-import { sendValidationMail, login, loginSuccess } from '../account/actions';
+import { sendValidationMail, login } from '../account/actions';
 import { closeDialog } from '../actions';
+import { notifyUser } from '../../components/appBasic/actions';
+
+import { userQuery, createUserMutation } from '../../components/account/graphql';
 
 const styles = {
   dialogContent: {
@@ -118,51 +123,29 @@ const mapDispatchToProps = dispatch => ({
     dispatch(login(values));
   },
   closeDialog: () => {
-    closeDialog();
+    dispatch(closeDialog());
   },
-  loginSuccess: () => {
-    dispatch(batchActions([loginSuccess(), closeDialog()]));
+  notifyUser: (message) => {
+    dispatch(notifyUser(message));
   },
 });
 
 const mapStateToProps = state => ({
   getStartedStep: state.getStartedStep,
-  picture: state.auth.user.picture,
-  idToken: state.auth.idToken,
   dialogOpen: state.dialog.open,
   dialogContent: state.dialog.content,
 });
 
-const createUser = gql`
-  mutation ($idToken: String!, $firstname: String!, $surname: String!,
-    $emailAddress: String!, $picture: String!) {
-    createUser(authProvider: {auth0: {idToken: $idToken}},
-      firstname: $firstname, surname: $surname, emailAddress: $emailAddress, picture: $picture) {
-      id
-    }
-  }
-`;
-
-const userQuery = gql`
-  query {
-    user {
-      id,
-      firstname,
-      surname
-    }
-  }
-`;
-
 export default connect(mapStateToProps, mapDispatchToProps)(
   compose(
-    graphql(createUser, {
+    graphql(createUserMutation, {
       props: ({ ownProps, mutate }) => ({
         createUser: userDetails =>
           mutate({
             variables: {
               ...userDetails,
-              idToken: localStorage.getItem('id_token'),
-              picture: ownProps.picture,
+              idToken: localStorage.getItem('id_token') || '',
+              picture: localStorage.getItem('user').picture || '',
             },
             refetchQueries: [
               {
@@ -171,13 +154,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(
             ],
           })
             .then(() => {
-              ownProps.loginSuccess();
+              ownProps.closeDialog();
             })
             .catch((e) => {
               console.error(e);
-              ownProps.notifyUser('Sign up was not successful, Please try again.');
+              ownProps.notifyUser(
+                `Sign up was not successful, Please try again.${JSON.stringify(e)}`,
+              );
             }),
       }),
     }),
+    graphql(userQuery, { options: { fetchPolicy: 'network-only' } }),
   )(GetStartedPage),
 );

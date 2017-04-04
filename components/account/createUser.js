@@ -47,6 +47,7 @@ class CreateUser extends Component {
             fullWidth
             validate={[required, minLength2]}
             autoFocus
+            id="firstname"
           />
           <Field
             name="surname"
@@ -56,6 +57,7 @@ class CreateUser extends Component {
             floatingLabelText="Surname"
             fullWidth
             validate={[required, minLength2]}
+            id="surname"
           />
           <Field
             name="emailAddress"
@@ -65,6 +67,7 @@ class CreateUser extends Component {
             floatingLabelText="Email"
             fullWidth
             validate={[required, email]}
+            id="emailAddress"
           />
           <div className="terms">
             <p>
@@ -108,11 +111,11 @@ const CreateUser2 = reduxForm({
 
 export default connect(state => ({
   initialValues: {
-    firstname: state.auth.user.firstName,
-    surname: state.auth.user.surname,
-    emailAddress: state.auth.user.email,
+    firstname: state.user.firstName,
+    surname: state.user.surname,
+    emailAddress: state.user.email,
   },
-  firstname: state.auth.user.firstName,
-  surname: state.auth.user.surname,
-  email: state.auth.user.email,
+  firstname: state.user.firstName,
+  surname: state.user.surname,
+  email: state.user.email,
 }))(CreateUser2);

@@ -5,11 +5,10 @@ const env = require('../config/env');
 
 let apolloClient = null;
 
-
 const getNetworkInterface = (idToken) => {
   const networkInterface = createNetworkInterface({ uri: env.GRAPHQLSVR_URI });
-  return (
-    networkInterface.use([{
+  return networkInterface.use([
+    {
       applyMiddleware(req, next) {
         if (!req.options.headers) {
           req.options.headers = {};
@@ -21,8 +20,8 @@ const getNetworkInterface = (idToken) => {
         }
         next();
       },
-    }])
-  );
+    },
+  ]);
 };
 
 function createClient(idToken, initialState) {
@@ -31,6 +30,7 @@ function createClient(idToken, initialState) {
     ssrMode: !process.browser,
     dataIdFromObject: result => result.id || null,
     networkInterface: getNetworkInterface(idToken),
+    ssrForceFetchDelay: 100,
   });
 }
 

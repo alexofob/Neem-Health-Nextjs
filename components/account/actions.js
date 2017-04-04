@@ -3,16 +3,11 @@ import 'whatwg-fetch'; // Fetch polyfill for old browsers
 import { batchActions } from 'redux-batched-actions';
 import Router from 'next/router';
 
-import {
-  LOGIN_REQUEST,
-  LOGIN_SUCCESS,
-  LOGIN_FAILURE,
-  UPDATE_USER,
-  SET_IDTOKEN,
-} from './actionTypes';
+import { LOGIN_REQUEST, UPDATE_USER } from './actionTypes';
 import { notifyUser } from '../appBasic/actions';
 import { openDialog, closeDialog } from '../actions';
 import { checkStatus, parseJSON } from '../../utils/common';
+import { setToken } from '../../utils/auth';
 
 const env = require('../../config/env');
 
@@ -21,28 +16,14 @@ export const requestLogin = email => ({
   email,
 });
 
-export const loginSuccess = () => ({
-  type: LOGIN_SUCCESS,
-});
-
-export const loginFailed = error => ({
-  type: LOGIN_FAILURE,
-  error,
-});
-
 export const updateUser = user => ({
   type: UPDATE_USER,
   user,
 });
 
-export const setIdToken = idToken => ({
-  type: SET_IDTOKEN,
-  idToken,
-});
-
 const handleError = (err, dispatch, message) => {
   console.error(err);
-  return dispatch(batchActions([notifyUser(message), loginFailed(err)]));
+  return dispatch(notifyUser(message));
 };
 
 // Step 1 in the passwordless authentication procedure
@@ -56,8 +37,8 @@ export const sendValidationMail = (values) => {
     send: 'code',
     authParams: {
       // any authentication parameters that you would like to add
-      scope: 'openid profile',
-      state: 'YOUR_STATE',
+      scope: 'openid profile email',
+      state: window.localStorage.getItem('secret'),
     },
   };
 
@@ -103,7 +84,7 @@ export const sendValidationMail = (values) => {
 // Login user with the code
 export const login = values =>
   (dispatch, getState) => {
-    const { auth: { user: { email } } } = getState();
+    const { user: { email } } = getState();
 
     const data = {
       client_id: env.AUTH0_CLIENT_ID,
@@ -125,32 +106,12 @@ export const login = values =>
       .then(parseJSON)
       .then((token) => {
         dispatch(closeDialog());
-        Router.push(
-          `${env.APP_URL}/getStarted?access_token=${token.access_token}&id_token=${token.id_token}`,
-        );
+        setToken(token.id_token);
+        Router.push('/getStarted');
       })
       .catch((err) => {
         // If there was a problem, log to console and
         // dispatch the error condition
         handleError(err, dispatch, 'Login Failed, please try again.');
-      });
-  };
-
-export const getUserProfile = accessToken =>
-  (dispatch) => {
-    // Get User Profile from the access_token
-    const config = {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    };
-    return fetch(`https://${env.AUTH0_DOMAIN}/userinfo`, config)
-      .then(checkStatus)
-      .then(parseJSON)
-      .then(user => dispatch(updateUser(user)))
-      .catch((err) => {
-        handleError(err, dispatch, 'Get user profile failed, please try again');
       });
   };

@@ -1,67 +1,29 @@
-import {
-  LOGIN_REQUEST,
-  LOGIN_SUCCESS,
-  LOGIN_FAILURE,
-  LOGOUT_SUCCESS,
-  UPDATE_USER,
-  SET_IDTOKEN,
-} from './actionTypes';
+import { LOGIN_REQUEST, UPDATE_USER } from './actionTypes';
 
-const initialState = {
-  isFetching: false,
-  isAuthenticated: false,
-  user: {
-    email: '',
-    picture: '',
-    name: '',
-    firstName: '',
-    surname: '',
-  },
-  errorMessage: {},
-  idToken: '',
+const initialUserState = {
+  email: '',
+  picture: '',
+  name: '',
+  firstName: '',
+  surname: '',
 };
 
 // The auth reducer.
-const auth = (state = initialState, action) => {
+const user = (state = initialUserState, action) => {
   switch (action.type) {
     case LOGIN_REQUEST:
-      return Object.assign({}, state, {
-        isFetching: true,
-        user: { email: action.email },
-      });
-    case LOGIN_SUCCESS:
-      return Object.assign({}, state, {
-        isFetching: false,
-        isAuthenticated: true,
-      });
-    case LOGIN_FAILURE:
-      return Object.assign({}, state, {
-        isFetching: false,
-        isAuthenticated: false,
-        errorMessage: action.error,
-      });
-    case LOGOUT_SUCCESS:
-      return Object.assign({}, state, {
-        isFetching: true,
-        isAuthenticated: false,
-      });
+      return Object.assign({}, state, { email: action.email });
     case UPDATE_USER:
       return Object.assign({}, state, {
-        user: {
-          email: action.user.email,
-          picture: action.user.picture,
-          name: action.user.name,
-          firstName: action.user.given_name || '',
-          surname: action.user.family_name || '',
-        },
-      });
-    case SET_IDTOKEN:
-      return Object.assign({}, state, {
-        idToken: action.idToken,
+        email: action.user.email || '',
+        picture: action.user.picture,
+        name: action.user.name,
+        firstName: action.user.given_name || '',
+        surname: action.user.family_name || '',
       });
     default:
       return state;
   }
 };
 
-export default auth;
+export default user;
