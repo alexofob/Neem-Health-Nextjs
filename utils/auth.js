@@ -2,21 +2,18 @@
 import jwtDecode from 'jwt-decode';
 import Cookie from 'js-cookie';
 
-const getQueryParams = () => {
-  const params = {};
-  window.location.href.replace(/([^(?|#)=&]+)(=([^&]*))?/g, ($0, $1, $2, $3) => {
-    params[$1] = $3;
-  });
-  return params;
-};
+function getParameterByName(name) {
+  const match = RegExp(`[#&]${name}=([^&]*)`).exec(window.location.hash);
+  return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
 
-export const extractInfoFromHash = () => {
-  if (!process.browser) {
-    return undefined;
-  }
-  const { id_token, state } = getQueryParams();
-  return { idToken: id_token, secret: state };
-};
+export function getSecret() {
+  return getParameterByName('state');
+}
+
+export function getIdToken() {
+  return getParameterByName('id_token');
+}
 
 export const setToken = (token) => {
   if (!process.browser) {
@@ -80,4 +77,5 @@ export const setSecret = (secret) => {
 
 export const checkSecret = secret => window.localStorage.secret === secret;
 
-export const getBaseUrl = () => `${window.location.protocol}//${window.location.host}`;
+export const getBaseUrl = () =>
+  process.browser ? `${window.location.protocol}//${window.location.host}` : '';

@@ -1,29 +1,51 @@
-
 /* global navigator */
 
-import { Component, PropTypes } from 'react';
+import { PropTypes, Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { teal500, teal700, deepOrangeA200 } from 'material-ui/styles/colors';
-import withRedux from 'next-redux-wrapper';
+import { connect } from 'react-redux';
+import { batchActions } from 'redux-batched-actions';
+import { graphql } from 'react-apollo';
 
-import initStore from '../store';
+import withData from '../apollo/withData';
+import withSignUp from '../hocs/withSignUp';
+import withMultiTabLogout from '../hocs/withMultiTabLogout';
 
 // imported components
 import App from '../components/appBasic';
 import HomePage from '../components/homePage';
 
+import { updateUser } from '../components/account/actions';
+import { notifyUser } from '../components/appBasic/actions';
+import { openDialog, closeDialog } from '../components/actions';
+
+import { userQuery } from '../components/account/graphql';
 
 class Home extends Component {
-
-  static async getInitialProps({ req }) {
-    return req
-      ? { userAgent: req.headers['user-agent'] }
-      : { userAgent: navigator.userAgent };
+  static async getInitialProps({ req, query }) {
+    return {
+      userAgent: req ? req.headers['user-agent'] : navigator.userAgent,
+      loginFailed: query ? query.loginFailed : false,
+    };
   }
 
   static propTypes = {
-    userAgent: PropTypes.string.isRequired,
+    userAgent: PropTypes.string,
+    loginFailed: PropTypes.bool,
+    openDialog: PropTypes.func.isRequired,
+    notifyUser: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
+  };
+
+  componentDidMount() {
+    if (this.props.loginFailed) {
+      batchActions([
+        this.props.notifyUser('Login Failed, Please try again.'),
+        this.props.openDialog('login'),
+      ]);
+      console.log('inside home component did mount');
+    }
   }
 
   render() {
@@ -40,18 +62,35 @@ class Home extends Component {
           appBar: {
             height: 56,
           },
-        },
-        )}
+        })}
       >
-        <App
-          title="Neem Health - Your online Pharmacy"
-          carouselRequired
-        >
-          <HomePage />
+        <App title="Neem Health - Your online Pharmacy" carouselRequired>
+          <HomePage isAuthenticated={this.props.isAuthenticated} />
         </App>
       </MuiThemeProvider>
     );
   }
 }
 
-export default withRedux(initStore)(Home);
+const mapDispatchToProps = dispatch => ({
+  notifyUser: (message) => {
+    dispatch(notifyUser(message));
+  },
+  openDialog: (content) => {
+    dispatch(openDialog(content));
+  },
+  updateUser: (user) => {
+    dispatch(updateUser(user));
+  },
+  closeDialog: (content) => {
+    dispatch(closeDialog(content));
+  },
+});
+
+export default withData(
+  connect(null, mapDispatchToProps)(
+    graphql(userQuery, { options: { fetchPolicy: 'network-only' } })(
+      withSignUp(withMultiTabLogout(Home)),
+    ),
+  ),
+);

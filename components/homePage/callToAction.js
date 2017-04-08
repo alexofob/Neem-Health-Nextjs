@@ -1,9 +1,9 @@
 import { PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
+import Router from 'next/router';
 import { batchActions } from 'redux-batched-actions';
-
-import { openDialog } from '../actions';
+import { openLoginDialog, storeRestrictedPage } from '../actions';
 
 const style = {
   space: {
@@ -19,7 +19,11 @@ const CallToAction = props => (
         label="Get Started"
         secondary
         style={style.space}
-        onTouchTap={props.openLoginDialog}
+        onTouchTap={
+          props.isAuthenticated
+            ? () => Router.push('/getStarted')
+            : props.openLoginDialog('getStarted')
+        }
       />
     </div>
     <style jsx>
@@ -52,12 +56,14 @@ const CallToAction = props => (
 
 CallToAction.propTypes = {
   openLoginDialog: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
-  openLoginDialog: () => {
-    dispatch(batchActions([openDialog('login')]));
-  },
+  openLoginDialog: page =>
+    () => {
+      dispatch(batchActions([openLoginDialog(), storeRestrictedPage(page)]));
+    },
 });
 
-export default connect(state => state, mapDispatchToProps)(CallToAction);
+export default connect(null, mapDispatchToProps)(CallToAction);

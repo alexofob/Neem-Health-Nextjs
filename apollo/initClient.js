@@ -30,7 +30,6 @@ function createClient(idToken, initialState) {
     ssrMode: !process.browser,
     dataIdFromObject: result => result.id || null,
     networkInterface: getNetworkInterface(idToken),
-    ssrForceFetchDelay: 100,
   });
 }
 

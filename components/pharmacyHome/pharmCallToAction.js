@@ -1,5 +1,6 @@
 import { PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
+import Router from 'next/router';
 
 const style = {
   space: {
@@ -7,18 +8,24 @@ const style = {
   },
 };
 
-
 const PharmCallToAction = props => (
   <div className="call-to-action">
     <h1>Get ready to go online</h1>
     <div className="button">
       <RaisedButton
-        label="Get Started" secondary
+        label="Get Started"
+        secondary
         style={style.space}
-        onTouchTap={props.openLoginDialog}
+        onTouchTap={
+          props.isAuthenticated
+            ? () => Router.push('/getStarted')
+            : props.openLoginDialog('getStarted')
+        }
       />
     </div>
-    <style jsx>{`
+    <style jsx>
+      {
+        `
       .call-to-action {
         background-color: teal;
         padding: 6% 10%;
@@ -40,13 +47,15 @@ const PharmCallToAction = props => (
         }
 
       }
-    `}</style>
+    `
+      }
+    </style>
   </div>
 );
 
 PharmCallToAction.propTypes = {
   openLoginDialog: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
 };
-
 
 export default PharmCallToAction;

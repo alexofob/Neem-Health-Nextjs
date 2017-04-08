@@ -1,5 +1,6 @@
 import RaisedButton from 'material-ui/RaisedButton';
 import { PropTypes } from 'react';
+import Router from 'next/router';
 
 const style = {
   space: {
@@ -16,14 +17,21 @@ const PharmHeader = props => (
         online.
       </p>
       <RaisedButton
-        label="Get Started" secondary
+        label="Get Started"
+        secondary
         style={style.space}
         fullWidth={false}
-        onTouchTap={props.openLoginDialog}
+        onTouchTap={
+          props.isAuthenticated
+            ? () => Router.push('/getStarted')
+            : props.openLoginDialog('getStarted')
+        }
       />
     </section>
 
-    <style jsx>{`
+    <style jsx>
+      {
+        `
       h1 {
         font-size: 250%;
       }
@@ -64,12 +72,14 @@ const PharmHeader = props => (
           max-width: 684px;
         }
       }
-    `}</style>
+    `
+      }
+    </style>
   </div>
-
 );
 PharmHeader.propTypes = {
   openLoginDialog: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
 };
 
 export default PharmHeader;

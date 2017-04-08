@@ -7,9 +7,12 @@ import { blue800, fullWhite } from 'material-ui/styles/colors';
 import { reduxForm, Field } from 'redux-form';
 import { PropTypes } from 'react';
 import uuid from 'uuid';
+import { connect } from 'react-redux';
 
 import { required, email } from '../../utils/validators';
 import { setSecret, getBaseUrl } from '../../utils/auth';
+
+import { sendValidationMail } from '../account/actions';
 
 const env = require('../../config/env');
 
@@ -39,7 +42,7 @@ const PwdLessLogin = props => (
       backgroundColor={blue800}
       labelStyle={{ color: fullWhite }}
       href={
-        `https://${env.AUTH0_DOMAIN}/authorize?scope=openid%20profile%20email&response_type=id_token&client_id=${env.AUTH0_CLIENT_ID}&connection=facebook&redirect_uri=${getBaseUrl()}/auth/signed-in&state=${secret}&nonce=${secret}&`
+        `https://${env.AUTH0_DOMAIN}/authorize?scope=openid%20profile%20email&response_type=id_token&client_id=${env.AUTH0_CLIENT_ID}&connection=facebook&redirect_uri=${getBaseUrl()}/auth/signed-in?redirect=${props.restrictedPage}&state=${secret}&nonce=${secret}&`
       }
     />
     <RaisedButton
@@ -48,13 +51,13 @@ const PwdLessLogin = props => (
       icon={<FaGoogle />}
       style={{ ...styles.buttons, ...styles.googleButton }}
       href={
-        `https://${env.AUTH0_DOMAIN}/authorize?scope=openid%20profile%20email&response_type=id_token&client_id=${env.AUTH0_CLIENT_ID}&connection=google-oauth2&redirect_uri=${getBaseUrl()}/auth/signed-in&state=${secret}&nonce=${secret}&`
+        `https://${env.AUTH0_DOMAIN}/authorize?scope=openid%20profile%20email&response_type=id_token&client_id=${env.AUTH0_CLIENT_ID}&connection=google-oauth2&redirect_uri=${getBaseUrl()}/auth/signed-in?redirect=${props.restrictedPage}&state=${secret}&nonce=${secret}&`
       }
     />
     <div className="separator">
       <span>or</span>
     </div>
-    <form onSubmit={props.handleSubmit}>
+    <form onSubmit={props.handleSubmit(props.sendValidationMail)}>
       <Field
         name="email"
         component={TextField}
@@ -103,9 +106,22 @@ PwdLessLogin.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
+  restrictedPage: PropTypes.string.isRequired,
+  sendValidationMail: PropTypes.func.isRequired,
 };
 
-// Decorate with redux-form
-export default reduxForm({
-  form: 'loginForm',
-})(PwdLessLogin);
+const mapStateToProps = state => ({
+  restrictedPage: state.restrictedPage,
+});
+
+const mapDispatchToProps = dispatch => ({
+  sendValidationMail: (emailAddress) => {
+    dispatch(sendValidationMail(emailAddress));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  reduxForm({
+    form: 'loginForm',
+  })(PwdLessLogin),
+);

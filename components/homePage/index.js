@@ -11,9 +11,9 @@ import HowItWorks from './howItWorks';
 import CallToAction from './callToAction';
 import PwdLessLogin from '../account/pwdlessLogin';
 import ValidateLogin from '../account/validateLogin';
+import CreateUser from '../account/createUser';
 
 import { closeDialog } from '../actions';
-import { sendValidationMail, login } from '../account/actions';
 
 const styles = {
   dialogContent: {
@@ -24,24 +24,25 @@ const styles = {
 
 const HomePage = (props) => {
   const dialogContent = {
-    login: { node: <PwdLessLogin onSubmit={props.sendValidationMail} />, title: 'Log In' },
+    login: { node: <PwdLessLogin />, title: 'Log In' },
     validateLogin: {
-      node: <ValidateLogin onSubmit={props.login} />,
+      node: <ValidateLogin />,
       title: 'Enter your code to log in',
     },
+    createUser: { node: <CreateUser />, title: 'Sign Up' },
   };
   return (
     <div>
       <main>
         <section>
-          <HomeNavbar />
+          <HomeNavbar isAuthenticated={props.isAuthenticated} />
           <IntroHeader />
         </section>
         <DrugSearch />
         <FeaturedPharmacies />
         <div className="separator"><hr /></div>
         <HowItWorks />
-        <CallToAction />
+        <CallToAction isAuthenticated={props.isAuthenticated} />
       </main>
 
       <footer>
@@ -81,9 +82,8 @@ const HomePage = (props) => {
 HomePage.propTypes = {
   dialogOpen: PropTypes.bool.isRequired,
   dialogContent: PropTypes.string.isRequired,
-  sendValidationMail: PropTypes.func.isRequired,
   closeDialog: PropTypes.func.isRequired,
-  login: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -94,12 +94,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   closeDialog: () => {
     dispatch(closeDialog());
-  },
-  sendValidationMail: (email) => {
-    dispatch(sendValidationMail(email));
-  },
-  login: (values) => {
-    dispatch(login(values));
   },
 });
 

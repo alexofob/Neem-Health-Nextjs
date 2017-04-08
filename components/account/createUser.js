@@ -1,10 +1,16 @@
+/* global localStorage */
 import RaisedButton from 'material-ui/RaisedButton';
 import { TextField } from 'redux-form-material-ui';
 import { reduxForm, Field } from 'redux-form';
 import { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { graphql } from 'react-apollo';
 
 import { required, minLength2, email } from '../../utils/validators';
+import { closeDialog } from '../actions';
+import { notifyUser } from '../../components/appBasic/actions';
+import { userQuery, createUserMutation } from '../../components/account/graphql';
+import { updateUser } from './actions';
 
 const styles = {
   buttons: {
@@ -19,25 +25,21 @@ class CreateUser extends Component {
     pristine: PropTypes.bool.isRequired,
     submitting: PropTypes.bool.isRequired,
     autofill: PropTypes.func.isRequired,
-    firstname: PropTypes.string,
-    surname: PropTypes.string,
+    createUser: PropTypes.func.isRequired,
+    updateUser: PropTypes.func.isRequired,
   };
 
   // Hack to fix the form submit button not showing because form is not yet dirty
   componentWillReceiveProps(nextProps) {
-    if (nextProps.firstname && !this.props.firstname) {
-      this.props.autofill('firstname', `${nextProps.firstname} `);
-    } else if (
-      nextProps.firstname === this.props.firstname && nextProps.surname === this.props.surname
-    ) {
-      this.props.autofill('email', `${nextProps.email} `);
+    if (!nextProps.dirty) {
+      this.props.autofill('email', '');
     }
   }
 
   render() {
     return (
       <section role="form">
-        <form onSubmit={this.props.handleSubmit}>
+        <form onSubmit={this.props.handleSubmit(this.props.createUser)}>
           <Field
             name="firstname"
             component={TextField}
@@ -103,19 +105,60 @@ class CreateUser extends Component {
   }
 }
 
-// Decorate with redux-form
-const CreateUser2 = reduxForm({
-  form: 'createUserForm',
-  enableReinitialize: true,
-})(CreateUser);
-
-export default connect(state => ({
-  initialValues: {
-    firstname: state.user.firstName,
-    surname: state.user.surname,
-    emailAddress: state.user.email,
+const mapDispatchToProps = dispatch => ({
+  closeDialog: () => {
+    dispatch(closeDialog());
   },
-  firstname: state.user.firstName,
-  surname: state.user.surname,
-  email: state.user.email,
-}))(CreateUser2);
+  notifyUser: (message) => {
+    dispatch(notifyUser(message));
+  },
+  updateUser: () => {
+    dispatch(updateUser());
+  },
+});
+
+export default connect(
+  state => ({
+    initialValues: {
+      firstname: state.user.firstname,
+      surname: state.user.surname,
+      emailAddress: state.user.email,
+    },
+    firstname: state.user.firstname,
+    picture: state.user.picture,
+  }),
+  mapDispatchToProps,
+)(
+  graphql(createUserMutation, {
+    props: ({ ownProps, mutate }) => ({
+      createUser: userDetails =>
+        mutate({
+          variables: {
+            ...userDetails,
+            idToken: localStorage.getItem('token') || '',
+            picture: ownProps.picture || '',
+          },
+          refetchQueries: [
+            {
+              query: userQuery,
+            },
+          ],
+        })
+          .then(() => {
+            ownProps.closeDialog();
+            ownProps.updateUser();
+          })
+          .catch((e) => {
+            console.error(e);
+            ownProps.notifyUser(
+              `Sign up was not successful, Please try again.${JSON.stringify(e)}`,
+            );
+          }),
+    }),
+  })(
+    reduxForm({
+      form: 'createUserForm',
+      enableReinitialize: true,
+    })(CreateUser),
+  ),
+);

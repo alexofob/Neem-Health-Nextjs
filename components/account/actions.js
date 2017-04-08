@@ -16,7 +16,15 @@ export const requestLogin = email => ({
   email,
 });
 
-export const updateUser = user => ({
+const clearedUser = {
+  email: '',
+  picture: '',
+  name: '',
+  firstname: '',
+  surname: '',
+};
+
+export const updateUser = (user = clearedUser) => ({
   type: UPDATE_USER,
   user,
 });
@@ -84,8 +92,7 @@ export const sendValidationMail = (values) => {
 // Login user with the code
 export const login = values =>
   (dispatch, getState) => {
-    const { user: { email } } = getState();
-
+    const { user: { email }, restrictedPage } = getState();
     const data = {
       client_id: env.AUTH0_CLIENT_ID,
       connection: 'email',
@@ -107,7 +114,8 @@ export const login = values =>
       .then((token) => {
         dispatch(closeDialog());
         setToken(token.id_token);
-        Router.push('/getStarted');
+        Router.push(`/${restrictedPage}`);
+        location.reload();
       })
       .catch((err) => {
         // If there was a problem, log to console and

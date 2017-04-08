@@ -2,7 +2,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { TextField } from 'redux-form-material-ui';
 import { reduxForm, Field } from 'redux-form';
 import { PropTypes } from 'react';
+import { connect } from 'react-redux';
+
 import { required, number, maxLength6 } from '../../utils/validators';
+import { login } from '../account/actions';
 
 const styles = {
   buttons: {
@@ -11,8 +14,8 @@ const styles = {
   },
 };
 
-const ValidateLogin = ({ handleSubmit, pristine, submitting }) => (
-  <form onSubmit={handleSubmit} >
+const ValidateLogin = ({ handleSubmit, pristine, submitting, loginWithCode }) => (
+  <form onSubmit={handleSubmit(loginWithCode)}>
     <Field
       name="code"
       component={TextField}
@@ -37,9 +40,17 @@ ValidateLogin.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
+  loginWithCode: PropTypes.func.isRequired,
 };
 
-// Decorate with redux-form
-export default reduxForm({
-  form: 'validateLoginForm',
-})(ValidateLogin);
+const mapDispatchToProps = dispatch => ({
+  loginWithCode: (values) => {
+    dispatch(login(values));
+  },
+});
+
+export default connect(null, mapDispatchToProps)(
+  reduxForm({
+    form: 'loginForm',
+  })(ValidateLogin),
+);

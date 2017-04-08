@@ -3,16 +3,23 @@ import { Component, PropTypes } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { teal500, teal700, deepOrangeA200 } from 'material-ui/styles/colors';
-import withRedux from 'next-redux-wrapper';
 import { connect } from 'react-redux';
+import { batchActions } from 'redux-batched-actions';
+import { graphql } from 'react-apollo';
+
+import withData from '../apollo/withData';
+import withSignUp from '../hocs/withSignUp';
+import withMultiTabLogout from '../hocs/withMultiTabLogout';
 
 // imported components
 import App from '../components/appBasic';
 import PharmacyHome from '../components/pharmacyHome';
-import initStore from '../store';
 
+import { updateUser } from '../components/account/actions';
 import { notifyUser } from '../components/appBasic/actions';
-import { openDialog } from '../components/actions';
+import { openDialog, closeDialog } from '../components/actions';
+
+import { userQuery } from '../components/account/graphql';
 
 class Pharmacy extends Component {
   static async getInitialProps({ req, query }) {
@@ -27,12 +34,16 @@ class Pharmacy extends Component {
     loginFailed: PropTypes.string,
     openDialog: PropTypes.func.isRequired,
     notifyUser: PropTypes.func.isRequired,
+    data: PropTypes.object.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
   };
 
   componentDidMount() {
     if (this.props.loginFailed) {
-      this.props.openDialog('login');
-      this.props.notifyUser('Login Failed, Please try again.');
+      batchActions([
+        this.props.notifyUser('Login Failed, Please try again.'),
+        this.props.openDialog('login'),
+      ]);
     }
   }
 
@@ -55,7 +66,7 @@ class Pharmacy extends Component {
         })}
       >
         <App title="Neem Health - Your online Pharmacy" carouselRequired>
-          <PharmacyHome />
+          <PharmacyHome isAuthenticated={this.props.isAuthenticated} />
         </App>
       </MuiThemeProvider>
     );
@@ -69,6 +80,18 @@ const mapDispatchToProps = dispatch => ({
   openDialog: (content) => {
     dispatch(openDialog(content));
   },
+  updateUser: (user) => {
+    dispatch(updateUser(user));
+  },
+  closeDialog: (content) => {
+    dispatch(closeDialog(content));
+  },
 });
 
-export default withRedux(initStore)(connect(null, mapDispatchToProps)(Pharmacy));
+export default withData(
+  connect(null, mapDispatchToProps)(
+    graphql(userQuery, { options: { fetchPolicy: 'network-only' } })(
+      withSignUp(withMultiTabLogout(Pharmacy)),
+    ),
+  ),
+);

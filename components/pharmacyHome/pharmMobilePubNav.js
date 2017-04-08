@@ -11,24 +11,27 @@ const PharmMobilePubNav = props => (
     <MenuItem
       primaryText="Log in"
       leftIcon={<MdArrowForward />}
-      onTouchTap={props.closeDrawer}
+      onTouchTap={props.openLoginDialog('pharmacy')}
     />
     <MenuItem
       primaryText="Get Started"
       leftIcon={<MdAddCircle />}
-      onTouchTap={props.openLoginDialog}
+      onTouchTap={props.openLoginDialog('getStarted')}
     />
     <MenuItem
       primaryText="Search for your Drug"
       leftIcon={<MdSearch />}
       onTouchTap={props.closeDrawer}
     />
-    <Link href="/"><a><MenuItem
-      primaryText="App Home"
-      leftIcon={<MdArrowBack />}
-      onTouchTap={props.closeDrawer}
-    />
-    </a></Link>
+    <Link href="/">
+      <a>
+        <MenuItem
+          primaryText="App Home"
+          leftIcon={<MdArrowBack />}
+          onTouchTap={props.closeDrawer}
+        />
+      </a>
+    </Link>
   </div>
 );
 

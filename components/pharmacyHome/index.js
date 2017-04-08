@@ -3,8 +3,6 @@ import { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { batchActions } from 'redux-batched-actions';
 
-import { sendValidationMail, login, facebookLogin, googleLogin } from '../account/actions';
-
 // imported modules
 import PharmNavbar from './pharmNavbar';
 import PharmHeader from './pharmHeader';
@@ -12,8 +10,10 @@ import TopPharmacies from './topPharmacies';
 import PharmHowItWorks from './pharmHowItWorks';
 import PharmCallToAction from './pharmCallToAction';
 import PwdLessLogin from '../account/pwdlessLogin';
-import { closeDialog, openDialog, closeDrawer } from '../actions';
+import { closeDialog, openLoginDialog, closeDrawer, storeRestrictedPage } from '../actions';
 import ValidateLogin from '../account/validateLogin';
+
+import CreateUser from '../account/createUser';
 
 const styles = {
   dialogContent: {
@@ -25,29 +25,33 @@ const styles = {
 const HomePage = (props) => {
   const dialogContent = {
     login: {
-      node: (
-        <PwdLessLogin
-          onSubmit={props.sendValidationMail}
-          facebookLogin={props.facebookLogin}
-          googleLogin={props.googleLogin}
-        />
-      ),
+      node: <PwdLessLogin />,
       title: 'Log In',
     },
     validateLogin: {
-      node: <ValidateLogin onSubmit={props.login} />,
+      node: <ValidateLogin />,
       title: 'Enter your code to log in',
     },
+    createUser: { node: <CreateUser />, title: 'Sign Up' },
   };
   return (
     <div>
       <main>
-        <PharmNavbar openLoginDialog={props.openLoginDialog} />
-        <PharmHeader openLoginDialog={props.openLoginDialog} />
+        <PharmNavbar
+          openLoginDialog={props.openLoginDialog}
+          isAuthenticated={props.isAuthenticated}
+        />
+        <PharmHeader
+          openLoginDialog={props.openLoginDialog}
+          isAuthenticated={props.isAuthenticated}
+        />
         <PharmHowItWorks />
         <div className="separator"><hr /></div>
         <TopPharmacies />
-        <PharmCallToAction openLoginDialog={props.openLoginDialog} />
+        <PharmCallToAction
+          openLoginDialog={props.openLoginDialog}
+          isAuthenticated={props.isAuthenticated}
+        />
       </main>
 
       <footer>
@@ -83,13 +87,10 @@ const HomePage = (props) => {
 
 HomePage.propTypes = {
   dialogOpen: PropTypes.bool.isRequired,
-  sendValidationMail: PropTypes.func.isRequired,
   closeDialog: PropTypes.func.isRequired,
   openLoginDialog: PropTypes.func.isRequired,
   dialogContent: PropTypes.string.isRequired,
-  login: PropTypes.func.isRequired,
-  facebookLogin: PropTypes.func.isRequired,
-  googleLogin: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -101,21 +102,10 @@ const mapDispatchToProps = dispatch => ({
   closeDialog: () => {
     dispatch(closeDialog());
   },
-  sendValidationMail: (email) => {
-    dispatch(sendValidationMail(email));
-  },
-  openLoginDialog: () => {
-    dispatch(batchActions([closeDrawer(), openDialog('login')]));
-  },
-  login: (code) => {
-    dispatch(login(code));
-  },
-  facebookLogin: () => {
-    dispatch(facebookLogin());
-  },
-  googleLogin: () => {
-    dispatch(googleLogin());
-  },
+  openLoginDialog: redirect =>
+    () => {
+      dispatch(batchActions([closeDrawer(), openLoginDialog(), storeRestrictedPage(redirect)]));
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

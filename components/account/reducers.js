@@ -4,7 +4,7 @@ const initialUserState = {
   email: '',
   picture: '',
   name: '',
-  firstName: '',
+  firstname: '',
   surname: '',
 };
 
@@ -18,7 +18,7 @@ const user = (state = initialUserState, action) => {
         email: action.user.email || '',
         picture: action.user.picture,
         name: action.user.name,
-        firstName: action.user.given_name || '',
+        firstname: action.user.given_name || '',
         surname: action.user.family_name || '',
       });
     default:

@@ -4,17 +4,11 @@ import React, { PropTypes } from 'react';
 import { ApolloProvider, getDataFromTree } from 'react-apollo';
 import initClient from './initClient';
 import initStore from './initStore';
-import {
-  getUserFromCookie,
-  getUserFromLocalStorage,
-  getTokenFromCookie,
-  getTokenFromLocalStorage,
-} from '../utils/auth';
+import { getTokenFromCookie, getTokenFromLocalStorage } from '../utils/auth';
 
 export default Page =>
   class extends React.Component {
     static async getInitialProps(ctx) {
-      const loggedUser = process.browser ? getUserFromLocalStorage() : getUserFromCookie(ctx.req);
       const token = process.browser ? getTokenFromLocalStorage() : getTokenFromCookie(ctx.req);
       const pageProps = Page.getInitialProps && Page.getInitialProps(ctx);
       let client;
@@ -28,10 +22,7 @@ export default Page =>
 
       const props = {
         ...pageProps,
-        loggedUser: loggedUser || '',
-        currentUrl: ctx.pathname,
-        isAuthenticated: !!loggedUser,
-        userAgent: ctx.req ? ctx.req.headers['user-agent'] : navigator.userAgent,
+        currentUrl: ctx.pathname || '',
       };
 
       if (!process.browser) {

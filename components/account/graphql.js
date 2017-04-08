@@ -5,7 +5,7 @@ export const userQuery = gql`
     user {
       id,
       firstname,
-      surname
+      picture,
     }
   }
 `;
