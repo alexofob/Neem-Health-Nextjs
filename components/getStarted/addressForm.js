@@ -10,7 +10,6 @@ import MdArrowBack from 'react-icons/lib/md/arrow-back';
 import { geolocate, getStartedStep1 as getStep1, initAutocomplete } from './actions';
 import { required } from '../../utils/validators';
 
-
 const styles = {
   buttons: {
     height: 40,
@@ -21,7 +20,6 @@ const styles = {
   },
 };
 
-
 class AddressForm extends Component {
   static propTypes = {
     initAutocomplete2: PropTypes.func.isRequired,
@@ -30,23 +28,25 @@ class AddressForm extends Component {
     submitting: PropTypes.bool.isRequired,
     geolocate2: PropTypes.func.isRequired,
     getStartedStep1: PropTypes.func.isRequired,
-    initialValues: PropTypes.shape({
-      street: PropTypes.string,
-      city: PropTypes.string,
-      region: PropTypes.string,
-    }),
-  }
+    pristine: PropTypes.bool.isRequired,
+  };
   componentDidMount() {
     this.props.initAutocomplete2(document.getElementById('location'));
   }
   render() {
-    const { handleSubmit, geolocate2, initialValues, getStartedStep1,
-      invalid, submitting } = this.props;
+    const {
+      handleSubmit,
+      geolocate2,
+      getStartedStep1,
+      invalid,
+      submitting,
+      pristine,
+    } = this.props;
     return (
       <div>
         <p className="step">STEP 2</p>
         <p className="form-subheading">Address</p>
-        <form onSubmit={handleSubmit} >
+        <form onSubmit={handleSubmit}>
           <Field
             name="location"
             id="location"
@@ -56,44 +56,39 @@ class AddressForm extends Component {
             fullWidth
             style={styles.location}
           />
-          {
-            Object.keys(initialValues).length !== 0 &&
-              <div>
-                <Field
-                  name="street"
-                  id="street"
-                  component={TextField}
-                  type="text"
-                  floatingLabelText="Street Address"
-                  fullWidth
-                  validate={[required]}
+          {!pristine &&
+            <div>
+              <Field
+                name="street"
+                id="street"
+                component={TextField}
+                type="text"
+                floatingLabelText="Street Address"
+                fullWidth
+                validate={[required]}
+              />
 
-                />
+              <Field
+                name="city"
+                id="city"
+                component={TextField}
+                type="text"
+                floatingLabelText="City/Town"
+                fullWidth
+                validate={[required]}
+              />
 
-                <Field
-                  name="city"
-                  id="city"
-                  component={TextField}
-                  type="text"
-                  floatingLabelText="City/Town"
-                  fullWidth
-                  validate={[required]}
+              <Field
+                name="region"
+                id="region"
+                component={TextField}
+                type="text"
+                floatingLabelText="Region"
+                fullWidth
+                validate={[required]}
+              />
 
-                />
-
-                <Field
-                  name="region"
-                  id="region"
-                  component={TextField}
-                  type="text"
-                  floatingLabelText="Region"
-                  fullWidth
-                  validate={[required]}
-
-                />
-
-              </div>
-            }
+            </div>}
           <FlatButton
             label="Back"
             style={styles.buttons}
@@ -111,7 +106,9 @@ class AddressForm extends Component {
 
         </form>
 
-        <style jsx>{`
+        <style jsx>
+          {
+            `
           .step {
             color: #BDBDBD;
           }
@@ -120,38 +117,38 @@ class AddressForm extends Component {
             margin-bottom: 20px;
 
           }
-        `}</style>
+        `
+          }
+        </style>
 
       </div>
     );
   }
 }
 
-
-const mapDispatchToProps = dispatch => (
-  {
-    geolocate2: () => {
-      dispatch(geolocate());
-    },
-    getStartedStep1: () => {
-      dispatch(getStep1());
-    },
-    initAutocomplete2: (element) => {
-      dispatch(initAutocomplete(element));
-    },
-  }
-);
-
+const mapDispatchToProps = dispatch => ({
+  geolocate2: () => {
+    dispatch(geolocate());
+  },
+  getStartedStep1: () => {
+    dispatch(getStep1());
+  },
+  initAutocomplete2: (element) => {
+    dispatch(initAutocomplete(element));
+  },
+});
 
 // Decorate with redux-form
 const AddressForm2 = reduxForm({
   form: 'addressForm',
   enableReinitialize: true,
   keepDirtyOnReinitialize: true,
+  destroyOnUnmount: false,
 })(AddressForm);
 
 export default connect(
   state => ({
     initialValues: state.businessLoc,
   }),
-  mapDispatchToProps)(AddressForm2);
+  mapDispatchToProps,
+)(AddressForm2);

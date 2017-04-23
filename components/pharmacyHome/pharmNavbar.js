@@ -97,7 +97,7 @@ const PharmNavBar = props => (
 
     </Drawer>
 
-    <style>
+    <style jsx>
       {
         `
       .appbar {

@@ -1,8 +1,18 @@
 /* global navigator */
 
 import { box, fromNullable } from '../../utils/lib';
-import { SET_LOCATION, SET_AUTOCOMPLETE, UPDATE_LOCATION,
-  UPDATE_BUSS_INFO, GETSTARTED_STEP1, GETSTARTED_STEP2 } from './actionTypes';
+import {
+  SET_LOCATION,
+  SET_AUTOCOMPLETE,
+  UPDATE_LOCATION,
+  UPDATE_BUSS_INFO,
+  GETSTARTED_STEP1,
+  GETSTARTED_STEP2,
+} from './actionTypes';
+
+import { notifyUser } from '../appBasic/actions';
+
+const R = require('ramda');
 
 export const setLocation = location => ({
   type: SET_LOCATION,
@@ -42,57 +52,63 @@ function reducePlaces(memo, item) {
   };
 }
 
-const fillInAddress = (dispatch, getState) => () => {
-  const { autocomplete } = getState();
-  // Get the place details from the autocomplete object.
-  box(autocomplete.getPlace())
-  .fold(place => fromNullable(place.address_components)
-    .map(addressComponents =>
-      addressComponents.reduce(reducePlaces, { streetAddress: place.name })
-    )
-    .map(rawAddress => ({
-      street: rawAddress.streetAddress,
-      city: rawAddress.locality.short_name,
-      region: rawAddress.administrative_area_level_1.short_name,
-    }))
-  )
-  .fold(() => undefined, addressObj => dispatch(setLocation(addressObj)));
-};
+const fillInAddress = (dispatch, getState) =>
+  () => {
+    const { autocomplete } = getState();
+    // Get the place details from the autocomplete object.
+    box(autocomplete.getPlace())
+      .fold(place =>
+        fromNullable(place.address_components)
+          .map(addressComponents =>
+            addressComponents.reduce(reducePlaces, { streetAddress: place.name }))
+          .map(rawAddress => ({
+            street: rawAddress.streetAddress,
+            city: rawAddress.locality.short_name,
+            region: rawAddress.administrative_area_level_1.short_name,
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+            surburb: R.head(rawAddress.streetAddress.split(' ')),
+          })))
+      .fold(
+        () =>
+          dispatch(
+            notifyUser('Address details request failed, please enter the address manually.'),
+          ),
+        addressObj => dispatch(setLocation(addressObj)),
+      );
+  };
 
-export const initAutocomplete = autoCompletePlaces => (dispatch, getState) => {
-// Create the autocomplete object, restricting the search to geographical
-// location types.
-  // eslint-disable-next-line no-undef
-  box(new google.maps.places.Autocomplete(autoCompletePlaces, { types: ['geocode'] }))
-  // When the user selects an address from the dropdown, populate the address
-  // fields in the form
-  .map((autocomplete) => {
-    autocomplete.addListener('place_changed', fillInAddress(dispatch, getState));
-    return autocomplete;
-  })
-  .map(autocomplete => dispatch(setAutocomplete(autocomplete)));
-};
-
-export const geolocate = () => (dispatch, getState) => {
-  const { autocomplete } = getState();
-  fromNullable(navigator.geolocation)
-  .map(geolocation => geolocation.getCurrentPosition((position) => {
-    const location = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-    };
-
+export const initAutocomplete = autoCompletePlaces =>
+  (dispatch, getState) => {
+    // Create the autocomplete object, restricting the search to geographical
+    // location types.
     // eslint-disable-next-line no-undef
-    const circle = new google.maps.Circle({
-      center: location,
-      radius: position.coords.accuracy,
-    });
-    autocomplete.setBounds(circle.getBounds());
-    dispatch(setAutocomplete(autocomplete));
-  }));
-};
+    box(new google.maps.places.Autocomplete(autoCompletePlaces, { types: ['geocode'] }))
+      // When the user selects an address from the dropdown, populate the address
+      // fields in the form
+      .map((autocomplete) => {
+        autocomplete.addListener('place_changed', fillInAddress(dispatch, getState));
+        return autocomplete;
+      })
+      .map(autocomplete => dispatch(setAutocomplete(autocomplete)));
+  };
 
-export const saveBusinessInfo = bussAddr => (dispatch, getState) => {
-  const { businessInfo } = getState();
-  dispatch(updateBusinessAddr(bussAddr));
-};
+export const geolocate = () =>
+  (dispatch, getState) => {
+    const { autocomplete } = getState();
+    fromNullable(navigator.geolocation).map(geolocation =>
+      geolocation.getCurrentPosition((position) => {
+        const location = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+
+        // eslint-disable-next-line no-undef
+        const circle = new google.maps.Circle({
+          center: location,
+          radius: position.coords.accuracy,
+        });
+        autocomplete.setBounds(circle.getBounds());
+        dispatch(setAutocomplete(autocomplete));
+      }));
+  };

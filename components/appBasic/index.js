@@ -67,10 +67,15 @@ const AppBasic = (
           margin: 0;
           box-sizing: border-box;
         }
+        html,
+          body {
+             margin: 0;
+             padding: 0;
+             height: 100%;
+          }
         body {
-          margin: 0;
           font-family: Roboto, sans-serif;
-          background-color: 'white';
+          background-color: 'color';
         }
         a {
           color: #004D40;
@@ -98,6 +103,18 @@ const AppBasic = (
         .mobile-only {
           display: none !important;
 
+        }
+        .pageWrapper {
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+        }
+        main {
+          flex: 1;
+          width: 100%;
+        }
+        footer {
+          flex: none;
         }
 
         @media(max-width:767px) {

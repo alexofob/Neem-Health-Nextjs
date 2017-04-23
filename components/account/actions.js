@@ -115,7 +115,6 @@ export const login = values =>
         dispatch(closeDialog());
         setToken(token.id_token);
         Router.push(`/${restrictedPage}`);
-        location.reload();
       })
       .catch((err) => {
         // If there was a problem, log to console and

@@ -15,7 +15,7 @@ class ProfileNav extends Component {
     };
   }
 
-  handleMouseEnter = (event) => {
+  handleOnClick = (event) => {
     // This prevents ghost click.
     event.preventDefault();
 
@@ -37,7 +37,7 @@ class ProfileNav extends Component {
           src={this.props.picture}
           alt="profile nav"
           className="profile-container"
-          onMouseEnter={this.handleMouseEnter}
+          onClick={this.handleOnClick}
         />
         <Popover
           open={this.state.open}
@@ -53,12 +53,13 @@ class ProfileNav extends Component {
             `
             .profile-container {
               position: relative;
-              border: 1px solid #00AA8D;
               border-radius: 50%;
               height: 30px;
               padding: 1px;
               width: 30px;
               margin: 0 30px;
+              border: 1px solid white;
+              cursor: pointer;
             }
             `
           }

@@ -4,20 +4,17 @@ import { PropTypes } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { teal500, teal700, deepOrangeA200 } from 'material-ui/styles/colors';
+import { graphql, compose } from 'react-apollo';
 import { connect } from 'react-redux';
-import { graphql } from 'react-apollo';
 
 import withData from '../apollo/withData';
-import withSignUp from '../hocs/withSignUp';
 import securePage from '../hocs/securePage.js';
+import withMultiTabLogout from '../hocs/withMultiTabLogout';
 
 // imported components
 import App from '../components/appBasic';
 import GetStartedPage from '../components/getStarted';
-
-import { updateUser } from '../components/account/actions';
-import { notifyUser } from '../components/appBasic/actions';
-import { openDialog, closeDialog, storeRestrictedPage } from '../components/actions';
+import { storeRestrictedPage } from '../components/actions';
 
 import { userQuery } from '../components/account/graphql';
 
@@ -52,28 +49,14 @@ GetStarted.propTypes = {
 GetStarted.getInitialProps = ({ req }) =>
   req ? { userAgent: req.headers['user-agent'] } : { userAgent: navigator.userAgent };
 
-const mapDispatchToProps = dispatch => ({
-  notifyUser: (message) => {
-    dispatch(notifyUser(message));
-  },
-  openDialog: (content) => {
-    dispatch(openDialog(content));
-  },
-  updateUser: (user) => {
-    dispatch(updateUser(user));
-  },
-  closeDialog: (content) => {
-    dispatch(closeDialog(content));
-  },
-  storeRestrictedPage: (page) => {
-    dispatch(storeRestrictedPage(page));
-  },
-});
-
-export default withData(
-  connect(null, mapDispatchToProps)(
-    graphql(userQuery, { options: { fetchPolicy: 'network-only' } })(
-      withSignUp(securePage(GetStarted)),
-    ),
-  ),
-);
+export default compose(
+  withData,
+  graphql(userQuery, { options: { fetchPolicy: 'network-only' } }),
+  connect(null, dispatch => ({
+    storeRestrictedPage: (restrictedPage) => {
+      dispatch(storeRestrictedPage(restrictedPage));
+    },
+  })),
+  securePage,
+  withMultiTabLogout,
+)(GetStarted);

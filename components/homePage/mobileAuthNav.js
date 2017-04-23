@@ -41,7 +41,7 @@ const MobileAuthNav = props => (
 
 MobileAuthNav.propTypes = {
   closeDrawer: PropTypes.func.isRequired,
-  logoutTo: PropTypes.func.isRequired,
+  logoutTo: PropTypes.string.isRequired,
 };
 
 export default MobileAuthNav;

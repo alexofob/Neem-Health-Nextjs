@@ -46,6 +46,8 @@ const PharmHeader = props => (
         display: flex;
         padding: 4% 0 4% 10%;
         background-image: url('../../static/pharmacy-home3-big.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
       }
 
       .main-message-wrapper {

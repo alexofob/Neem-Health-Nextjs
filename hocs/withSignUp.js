@@ -12,7 +12,6 @@ export default Page =>
         ...pageProps,
         loggedUser: loggedUser || {},
         currentUrl: ctx.pathname || '',
-        isAuthenticated: !!loggedUser,
       };
     }
 

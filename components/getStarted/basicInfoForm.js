@@ -3,7 +3,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { TextField } from 'redux-form-material-ui';
 import { reduxForm, Field } from 'redux-form';
 import { PropTypes } from 'react';
-import { connect } from 'react-redux';
 
 import { required, minLength3, isPhoneNumber } from '../../utils/validators';
 
@@ -17,12 +16,11 @@ const styles = {
   },
 };
 
-
-let BasicInfoForm = props => (
+const BasicInfoForm = props => (
   <div>
     <p className="step">STEP 1</p>
     <p className="form-subheading">Basic Info</p>
-    <form onSubmit={props.handleSubmit} >
+    <form onSubmit={props.handleSubmit}>
       <Field
         name="businessName"
         id="businessName"
@@ -53,7 +51,9 @@ let BasicInfoForm = props => (
       />
     </form>
 
-    <style jsx>{`
+    <style jsx>
+      {
+        `
       .step {
         color: #BDBDBD;
       }
@@ -62,7 +62,9 @@ let BasicInfoForm = props => (
         margin-bottom: 20px;
 
       }
-    `}</style>
+    `
+      }
+    </style>
 
   </div>
 );
@@ -71,18 +73,12 @@ BasicInfoForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
-  initialValues: PropTypes.shape({
-    businessName: PropTypes.string,
-    phoneNumber: PropTypes.string,
-  }),
 };
 
-
 // Decorate with redux-form
-BasicInfoForm = reduxForm({
+export default reduxForm({
   form: 'BasicInfoForm',
   enableReinitialize: true,
   keepDirtyOnReinitialize: true,
+  destroyOnUnmount: false,
 })(BasicInfoForm);
-
-export default connect(state => ({ initialValues: state.businessInfo }))(BasicInfoForm);

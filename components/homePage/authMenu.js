@@ -24,7 +24,7 @@ const AuthMenu = ({ logoutTo }) => (
 );
 
 AuthMenu.propTypes = {
-  logoutTo: PropTypes.func.isRequired,
+  logoutTo: PropTypes.string.isRequired,
 };
 
 export default AuthMenu;

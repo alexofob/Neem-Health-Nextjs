@@ -44,7 +44,7 @@ const PharmMobileAuthNav = props => (
 
 PharmMobileAuthNav.propTypes = {
   closeDrawer: PropTypes.func.isRequired,
-  logoutTo: PropTypes.func.isRequired,
+  logoutTo: PropTypes.string.isRequired,
 };
 
 export default PharmMobileAuthNav;

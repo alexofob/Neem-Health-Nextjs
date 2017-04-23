@@ -7,6 +7,7 @@
     "data.either": "^1.5.0",
     "data.task": "^3.1.1",
     "es6-promise": "^4.1.0",
+    "express": "^4.15.2",
     "fantasy-identities": "^0.0.1",
     "gx": "^1.0.0-rc3",
     "js-cookie": "^2.1.4",
@@ -31,7 +32,7 @@
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
-    "dev": "next",
+    "dev": "node server.js",
     "build": "next build",
     "start": "next start",
     "test": "jest --watch --env=jsdom"

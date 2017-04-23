@@ -1,16 +1,16 @@
-/* global localStorage */
+/* global localStorage location */
 import RaisedButton from 'material-ui/RaisedButton';
 import { TextField } from 'redux-form-material-ui';
 import { reduxForm, Field } from 'redux-form';
 import { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { graphql } from 'react-apollo';
+import Router from 'next/router';
 
 import { required, minLength2, email } from '../../utils/validators';
 import { closeDialog } from '../actions';
 import { notifyUser } from '../../components/appBasic/actions';
 import { userQuery, createUserMutation } from '../../components/account/graphql';
-import { updateUser } from './actions';
 
 const styles = {
   buttons: {
@@ -26,7 +26,6 @@ class CreateUser extends Component {
     submitting: PropTypes.bool.isRequired,
     autofill: PropTypes.func.isRequired,
     createUser: PropTypes.func.isRequired,
-    updateUser: PropTypes.func.isRequired,
   };
 
   // Hack to fix the form submit button not showing because form is not yet dirty
@@ -112,9 +111,6 @@ const mapDispatchToProps = dispatch => ({
   notifyUser: (message) => {
     dispatch(notifyUser(message));
   },
-  updateUser: () => {
-    dispatch(updateUser());
-  },
 });
 
 export default connect(
@@ -126,6 +122,7 @@ export default connect(
     },
     firstname: state.user.firstname,
     picture: state.user.picture,
+    restrictedPage: state.restrictedPage,
   }),
   mapDispatchToProps,
 )(
@@ -146,7 +143,9 @@ export default connect(
         })
           .then(() => {
             ownProps.closeDialog();
-            ownProps.updateUser();
+            if (ownProps.restrictedPage) {
+              Router.push(`/${ownProps.restrictedPage}`);
+            }
           })
           .catch((e) => {
             console.error(e);

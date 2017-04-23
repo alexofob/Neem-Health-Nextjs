@@ -10,7 +10,9 @@ export default Page =>
   class extends React.Component {
     static async getInitialProps(ctx) {
       const token = process.browser ? getTokenFromLocalStorage() : getTokenFromCookie(ctx.req);
+      const userAgent = ctx.req ? ctx.req.headers['user-agent'] : navigator.userAgent;
       const pageProps = Page.getInitialProps && Page.getInitialProps(ctx);
+      const query = ctx.query || null;
       let client;
 
       if (token) {
@@ -21,8 +23,11 @@ export default Page =>
       const store = initStore(client, client.initialState);
 
       const props = {
+        query,
+        userAgent,
         ...pageProps,
         currentUrl: ctx.pathname || '',
+        isAuthenticated: !!token,
       };
 
       if (!process.browser) {

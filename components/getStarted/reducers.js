@@ -1,7 +1,21 @@
-import { SET_LOCATION, SET_AUTOCOMPLETE, UPDATE_LOCATION,
-  UPDATE_BUSS_INFO, GETSTARTED_STEP1, GETSTARTED_STEP2 } from './actionTypes';
+import {
+  SET_LOCATION,
+  SET_AUTOCOMPLETE,
+  UPDATE_LOCATION,
+  UPDATE_BUSS_INFO,
+  GETSTARTED_STEP1,
+  GETSTARTED_STEP2,
+} from './actionTypes';
 
-export const businessLoc = (state = {}, action) => {
+const initialBusinessLoc = {
+  street: '',
+  city: '',
+  region: '',
+  lat: 0.0,
+  lng: 0.0,
+};
+
+export const businessLoc = (state = initialBusinessLoc, action) => {
   switch (action.type) {
     case SET_LOCATION:
       return action.location;
@@ -21,7 +35,12 @@ export const autocomplete = (state = {}, action) => {
   }
 };
 
-export const businessInfo = (state = {}, action) => {
+const initialBusinessInfo = {
+  businessName: '',
+  phoneNumber: '',
+};
+
+export const businessInfo = (state = initialBusinessInfo, action) => {
   switch (action.type) {
     case UPDATE_BUSS_INFO:
       return action.businessInfo;

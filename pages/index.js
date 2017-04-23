@@ -25,8 +25,8 @@ import { userQuery } from '../components/account/graphql';
 class Home extends Component {
   static async getInitialProps({ req, query }) {
     return {
-      userAgent: req ? req.headers['user-agent'] : navigator.userAgent,
       loginFailed: query ? query.loginFailed : false,
+      userAgent: req ? req.headers['user-agent'] : navigator.userAgent,
     };
   }
 

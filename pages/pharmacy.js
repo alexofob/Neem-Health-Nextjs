@@ -24,8 +24,8 @@ import { userQuery } from '../components/account/graphql';
 class Pharmacy extends Component {
   static async getInitialProps({ req, query }) {
     return {
-      userAgent: req ? req.headers['user-agent'] : navigator.userAgent,
       loginFailed: query ? query.loginFailed : undefined,
+      userAgent: req ? req.headers['user-agent'] : navigator.userAgent,
     };
   }
 
@@ -34,7 +34,6 @@ class Pharmacy extends Component {
     loginFailed: PropTypes.string,
     openDialog: PropTypes.func.isRequired,
     notifyUser: PropTypes.func.isRequired,
-    data: PropTypes.object.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
   };
 
